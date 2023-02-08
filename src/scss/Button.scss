@@ -1,0 +1,20 @@
+.moufa-button {
+  border: 1px solid #ccc;
+  color: black;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10%;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    transition: all .3s ease-out;
+    color: white;
+    background-color: black;
+  }
+
+  &:active {
+    color: black;
+    background-color: white;
+  }
+}

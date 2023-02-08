@@ -1,0 +1,29 @@
+.sequencer-container {
+  .sequencer {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-gap: 10px;
+
+
+    button {
+      padding: 20px;
+      font-size: 18px;
+      background-color: white;
+      border: 1px solid black;
+
+      &.selected {
+        background-color: blue;
+      }
+
+      &.active {
+        //transition: all .1s ease-out;
+        border-color: red;
+        border-width: 2px;
+      }
+    }
+  }
+
+  .button-container {
+    padding: 10px;
+  }
+}

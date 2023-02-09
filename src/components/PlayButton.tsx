@@ -33,6 +33,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequ
   const [currentStep, setCurrentStep] = useState(0);
   const [activeNotes, setActiveNotes] = useState([])
 
+  
 
   useEffect(() => {
     let intervalId: any;

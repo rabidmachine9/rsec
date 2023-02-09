@@ -1,16 +1,16 @@
 .moufa-button {
-  border: 1px solid #ccc;
-  color: black;
+  border: 1px solid $border-clr;
+  color: $font-clr;
   background-color: white;
-  padding: 10px;
-  border-radius: 10%;
+  padding: pad(1);
+  border-radius: $curved-corner;
   cursor: pointer;
   font-weight: bold;
-
+  margin-right: pad(1);
   &:hover {
     transition: all .3s ease-out;
     color: white;
-    background-color: black;
+    background-color: $bg-clr;
   }
 
   &:active {

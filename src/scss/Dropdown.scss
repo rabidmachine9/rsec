@@ -1,9 +1,7 @@
 .moufa-dropdown {
-  border: 1px solid #ccc;
-  color: black;
+  color: $font-clr;
   background-color: white;
-  padding: 10px;
-  border-radius: 10%;
-  cursor: pointer;
-  font-weight: bold;
+  padding: pad(1);
+  border-radius: $curved-corner;
+
 }

@@ -3,27 +3,32 @@
     display: grid;
     grid-template-columns: repeat(8, 50px);
     grid-gap: 10px;
-
+    padding:pad(1);
 
     button {
       padding: 20px;
       font-size: 18px;
       background-color: white;
-      border: 1px solid black;
+      border: 1px solid $border-clr;
 
       &.selected {
-        background-color: blue;
+        background-color: $selected-box;
       }
 
       &.active {
         //transition: all .1s ease-out;
-        border-color: red;
+        border-color: $active-column;
         border-width: 2px;
       }
     }
   }
 
   .button-container {
-    padding: 10px;
+    padding: pad(1);
+    display: inline-flex;
+
+    label{
+      align-self: center;
+    }
   }
 }

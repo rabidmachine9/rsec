@@ -8,12 +8,14 @@ interface DropdownProps {
 
 export const Dropdown: React.FC<DropdownProps> = ({ label, options, onChange }) => {
   return (
-    <label htmlFor="ratio" > {label}
-      <select className="moufa-dropdown" name="ratio" id="ratio" onChange={onChange}>
+  <>
+    <label htmlFor="ratio" > {label}</label>
+      <select className="moufa-button moufa-dropdown" name="ratio" id="ratio" onChange={onChange}>
         {Array.from(options.entries()).map(([key, value]) => (
           <option key={key} value={value}>{key}</option>
         ))}
       </select>
-    </label>
+      </>
+    
   );
 };

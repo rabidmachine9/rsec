@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FunctionComponent } from 'react';
 import { PlayButton } from './PlayButton';
 import { bpmToMs, ratioOptions } from '../functions/f'
 import { Dropdown } from './Dropdown';
 
 
+type SeqProps = {
+  bpm: number
+}
 
-export const Sequencer = () => {
+
+
+export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
 
   const [steps, setSteps] = useState(8)
   const [notesNum, setNoteNum] = useState(4)
   const [sequence, setSequence] = useState<Array<Array<number>>>([])
-  const [bpm, SetBpm] = useState(120)
   const [ratio, setRatio] = useState(1)
   const [timeInterval, setTimeInterval] = useState(() => bpmToMs(bpm, ratio))
   const [baseNote, setBaseNote] = useState(36)
-
+  
+  useEffect(() => {
+    setTimeInterval(() => bpmToMs(bpm, ratio))
+  }, [bpm, ratio])
 
   useEffect(() => {
     setSequence(() => gridToSeq(document.getElementById('grid')))
@@ -53,8 +60,8 @@ export const Sequencer = () => {
   const onRatioChange: React.FormEventHandler<HTMLInputElement> = (e) => {
     let value: number = e.currentTarget.value as unknown as number
     setRatio(() => value)
-    let interval = bpmToMs(bpm, e.currentTarget.value as unknown as number)
-    setTimeInterval(() => interval)
+    // let interval = bpmToMs(bpm, e.currentTarget.value as unknown as number)
+    // setTimeInterval(() => interval)
   }
 
 
@@ -77,7 +84,7 @@ export const Sequencer = () => {
       </div>
       <div className="button-container">
         <PlayButton sequence={sequence} timeInterval={timeInterval} ></PlayButton>
-        <Dropdown options={ratioOptions} label="Choose beat ratio:" onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
+        <Dropdown options={ratioOptions} label="Ratio:" onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
       </div>
 
     </div >

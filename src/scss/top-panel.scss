@@ -1,0 +1,11 @@
+.top-panel {
+    background-color: $bg-clr;
+    width:100vw;
+    padding: 10px;
+    display: flex;
+
+    input{
+        border-color: $border-clr;
+        border-radius: $curved-corner;
+    }
+}

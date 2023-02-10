@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import { PlayButton } from './PlayButton';
-import { bpmToMs, ratioOptions } from '../functions/f'
+import { arrayRemove, bpmToMs, ratioOptions } from '../functions/f'
 import { Dropdown } from './Dropdown';
 
 
@@ -37,8 +37,6 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
         if (Number(btn.dataset.column) === i) {
           if (btn.classList.contains('selected'))
             noteSeq.push(btn.dataset.note)
-          else
-            noteSeq.push(-1)
         }
       })
       seq.push(noteSeq)
@@ -49,19 +47,33 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
     return seq
   }
 
-  function onSeqStepClick(e: React.MouseEvent<HTMLButtonElement>) {
-    const target = e.target as Element;
-    target.classList.toggle('selected')
-    let grid = document.getElementById('grid')
-    let seq = gridToSeq(grid)
+  function addToSeq(col: number, note: number){
+    let seq = sequence
+    seq[col].push(note)
     setSequence(seq)
+  }
+  function removeFromSeq(col: number, note: number){
+    let seq = sequence
+    seq[col] = arrayRemove(seq[col], note)
+
+    setSequence(seq)
+  }
+
+  function onSeqStepClick(e: React.MouseEvent<HTMLButtonElement>) {
+    const target = e.target as HTMLElement;
+    target.classList.toggle('selected')
+    //let grid = document.getElementById('grid')
+    if(target.classList.contains('selected')){
+      addToSeq(Number(target.dataset.column) , Number(target.dataset.note))
+    }
+    else{
+      removeFromSeq(Number(target.dataset.column) , Number(target.dataset.note))
+    }
   }
 
   const onRatioChange: React.FormEventHandler<HTMLInputElement> = (e) => {
     let value: number = e.currentTarget.value as unknown as number
     setRatio(() => value)
-    // let interval = bpmToMs(bpm, e.currentTarget.value as unknown as number)
-    // setTimeInterval(() => interval)
   }
 
 

@@ -11,56 +11,33 @@ type ButtonProps = {
 }
 
 
-function colorSeqCol(col: number, length: number) {
-  var ractiveEl
+function colorSeqCol(col: number) {
+  let grid = document.getElementById('grid')
+  let seqButtons = grid!.querySelectorAll('.seq-button')
+
+  Array.from(seqButtons).forEach((el) => {
+    el.classList.remove('active')
+  })
   let activeEl = document.querySelectorAll('[data-column="' + col + '"]')
-  for (let i = 0; i < activeEl.length; i++) {
-    activeEl[i].classList.add('active');
-  }
-  if (col === 0) {
-    ractiveEl = document.querySelectorAll('[data-column="' + (length - 1) + '"]')
-  }
-  else {
-    ractiveEl = document.querySelectorAll('[data-column="' + (col - 1) + '"]')
-  }
-  for (let i = 0; i < ractiveEl?.length; i++) {
-    ractiveEl[i]?.classList.remove('active');
-  }
+  activeEl.forEach((el) => {
+    el.classList.add('active')
+  })
+  
 }
 
 export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequence, timeInterval }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [activeNotes, setActiveNotes] = useState([])
-
   
-
   useEffect(() => {
-    let intervalId: any;
+    let intervalId: ReturnType<typeof setInterval>;
 
 
     if (isPlaying) {
       intervalId = setInterval(() => {
-        activeNotes.forEach((note) => {
-          console.log("off")
-          sendMidiOff(note)
-        })
-        setActiveNotes([])
-        colorSeqCol(currentStep, sequence.length)
-
-        for (let i = 0; i < sequence[currentStep].length; i++) {
-          let currentNote = sequence[currentStep][i];
-          if (currentNote !== -1) {
-            setActiveNotes(() => {
-              let newActive: any = activeNotes
-              newActive.push(currentNote)
-              return newActive
-            })
-            sendMidiMessage(currentNote);
-          }
-        }
-
-
+        sendMidiOff(sequence[currentStep])
+        colorSeqCol(currentStep)
+        sendMidiMessage(sequence[currentStep]);
         setCurrentStep((currentStep + 1) % sequence.length);
       }, timeInterval);
     }

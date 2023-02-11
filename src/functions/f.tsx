@@ -36,3 +36,5 @@ export function arrayRemove(arr: any[], value: any) {
 
 
 export const ratioOptions = new Map<string, number>([['1', 1], ['1/2', 0.5], ['1/4', 0.25]]);
+
+export const stepOptions = new Map<string, number>([['8',8 ], ['4', 4], ['16', 16], ['32', 32]]);

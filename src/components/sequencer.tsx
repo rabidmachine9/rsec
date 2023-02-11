@@ -1,7 +1,8 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import { PlayButton } from './PlayButton';
-import { arrayRemove, bpmToMs, ratioOptions } from '../functions/f'
+import { arrayRemove, bpmToMs, ratioOptions, stepOptions } from '../functions/f'
 import { Dropdown } from './Dropdown';
+import { Repeat } from '@mui/icons-material';
 
 
 type SeqProps = {
@@ -17,8 +18,14 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
   const [sequence, setSequence] = useState<Array<Array<number>>>([])
   const [ratio, setRatio] = useState(1)
   const [timeInterval, setTimeInterval] = useState(() => bpmToMs(bpm, ratio))
-  const [baseNote, setBaseNote] = useState(36)
+  const [baseNote, setBaseNote] = useState(36) 
   
+
+  useEffect(() => {
+    console.log(steps)
+    setSequence(() => gridToSeq(document.getElementById('grid')))
+  }, [steps])
+
   useEffect(() => {
     setTimeInterval(() => bpmToMs(bpm, ratio))
   }, [bpm, ratio])
@@ -78,11 +85,14 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
 
 
 
+
   function renderSeqButtons(notesNum: number, steps: number) {
     let buttons = [];
     for (let j = 0; j < notesNum; j++) {
       for (let i = 0; i < steps; i++) {
-        buttons.push(<button className="seq-button" data-row={j} data-column={i} data-note={baseNote + (notesNum - 1) - j} onClick={onSeqStepClick} key={'' + i + j}></button>)
+        buttons.push(
+          <button className="seq-button" data-row={j} data-column={i} data-note={baseNote + (notesNum - 1) - j} onClick={onSeqStepClick} key={'' + i + j}></button>
+        )
       }
     }
     return buttons
@@ -91,12 +101,13 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
 
   return (
     <div className="sequencer-container">
-      <div className="sequencer" id="grid">
+      <div className="sequencer" id="grid" style={{gridTemplateColumns: "repeat("+steps+",40px)"}}>
         {renderSeqButtons(notesNum, steps)}
       </div>
       <div className="button-container">
         <PlayButton sequence={sequence} timeInterval={timeInterval} ></PlayButton>
         <Dropdown options={ratioOptions} label="Ratio:" onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
+        <Dropdown options={stepOptions} label="Steps:" onChange={(e:any)=>{ setSteps(() => e.target.value)}}></Dropdown>
       </div>
 
     </div >

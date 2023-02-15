@@ -22,19 +22,13 @@ export const sendMidiOff = (notes: number[]) => {
         output.send([0x94, note, 0x00]); // send a note on message on MIDI channel 1 (0x90) for specified note number at velocity 0
       });
     })
-    
+
   });
 };
 
 
-export function arrayRemove(arr: any[], value: any) { 
-    
-  return arr.filter(function(ele){ 
-      return ele != value; 
+export function arrayRemove(arr: any[], value: any) {
+  return arr.filter(function (ele) {
+    return ele != value;
   });
 }
-
-
-export const ratioOptions = new Map<string, number>([['1', 1], ['1/2', 0.5], ['1/4', 0.25]]);
-
-export const stepOptions = new Map<string, number>([['8',8 ], ['4', 4], ['16', 16], ['32', 32]]);

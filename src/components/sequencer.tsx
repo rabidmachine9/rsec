@@ -1,25 +1,37 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import { PlayButton } from './PlayButton';
-import { arrayRemove, bpmToMs, ratioOptions, stepOptions } from '../functions/f'
-import { Dropdown } from './Dropdown';
-import { Repeat } from '@mui/icons-material';
-
+import { arrayRemove, bpmToMs } from '../functions/f'
+import { Dropdown, Dropdown2 } from './Dropdown';
+import { Notes } from '../functions/notes';
+import { Scales, scales } from '../functions/scales';
+import { options } from '../functions/options'
 
 type SeqProps = {
   bpm: number
 }
 
+let harmony = new Notes
 
 
-export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
+export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
 
   const [steps, setSteps] = useState(8)
-  const [notesNum, setNoteNum] = useState(4)
+  const [noteRange, setNoteRange] = useState(8)
+  const [octave, setOctave] = useState(2)
   const [sequence, setSequence] = useState<Array<Array<number>>>([])
   const [ratio, setRatio] = useState(1)
   const [timeInterval, setTimeInterval] = useState(() => bpmToMs(bpm, ratio))
-  const [baseNote, setBaseNote] = useState(36) 
-  
+  const [rootNote, setRootNote] = useState<string>('c')
+  const [baseNoteNumber, setBaseNoteNumber] = useState(harmony.symbolToMidi(rootNote, octave))
+  const [scaleName, setScaleName] = useState<string>(() => 'harmonic')
+  const [scale, setScale] = useState<Array<number>>(() => scales[scaleName as keyof typeof scales])
+
+
+
+  useEffect(() => {
+    setBaseNoteNumber(harmony.symbolToMidi(rootNote, octave))
+    setSequence(() => gridToSeq(document.getElementById('grid')))
+  }, [octave, rootNote])
 
   useEffect(() => {
     console.log(steps)
@@ -54,12 +66,12 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
     return seq
   }
 
-  function addToSeq(col: number, note: number){
+  function addToSeq(col: number, note: number) {
     let seq = sequence
     seq[col].push(note)
     setSequence(seq)
   }
-  function removeFromSeq(col: number, note: number){
+  function removeFromSeq(col: number, note: number) {
     let seq = sequence
     seq[col] = arrayRemove(seq[col], note)
 
@@ -70,11 +82,11 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
     const target = e.target as HTMLElement;
     target.classList.toggle('selected')
     //let grid = document.getElementById('grid')
-    if(target.classList.contains('selected')){
-      addToSeq(Number(target.dataset.column) , Number(target.dataset.note))
+    if (target.classList.contains('selected')) {
+      addToSeq(Number(target.dataset.column), Number(target.dataset.note))
     }
-    else{
-      removeFromSeq(Number(target.dataset.column) , Number(target.dataset.note))
+    else {
+      removeFromSeq(Number(target.dataset.column), Number(target.dataset.note))
     }
   }
 
@@ -83,15 +95,24 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
     setRatio(() => value)
   }
 
-
+  function noteFromIndex(index: number, scaleLength: number, noteRange: number){
+    let oct = Math.floor(index/scaleLength)
+    let scaleIndex =  noteRange - index -1
+    let noteNumber = baseNoteNumber + (oct *12)+ scale[scaleIndex % scaleLength] 
+    return noteNumber
+  }
 
 
   function renderSeqButtons(notesNum: number, steps: number) {
     let buttons = [];
     for (let j = 0; j < notesNum; j++) {
+      let noteNumber = noteFromIndex(j, scale.length, notesNum)
+      if(noteNumber > 120) break
       for (let i = 0; i < steps; i++) {
         buttons.push(
-          <button className="seq-button" data-row={j} data-column={i} data-note={baseNote + (notesNum - 1) - j} onClick={onSeqStepClick} key={'' + i + j}></button>
+          <button className="seq-button" data-row={j} data-column={i} data-note={noteNumber} onClick={onSeqStepClick} key={'' + i + j}>
+            {harmony.midiToSymbol(noteNumber)}
+          </button>
         )
       }
     }
@@ -101,13 +122,24 @@ export const Sequencer: FunctionComponent<SeqProps> = ({bpm}) => {
 
   return (
     <div className="sequencer-container">
-      <div className="sequencer" id="grid" style={{gridTemplateColumns: "repeat("+steps+",40px)"}}>
-        {renderSeqButtons(notesNum, steps)}
+
+      <div className="sequencer" id="grid" style={{ gridTemplateColumns: "repeat(" + steps + ",40px)" }}>
+        {renderSeqButtons(noteRange, steps)}
       </div>
+
       <div className="button-container">
         <PlayButton sequence={sequence} timeInterval={timeInterval} ></PlayButton>
-        <Dropdown options={ratioOptions} label="Ratio:" onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
-        <Dropdown options={stepOptions} label="Steps:" onChange={(e:any)=>{ setSteps(() => e.target.value)}}></Dropdown>
+        <Dropdown options={options.ratio} label="Ratio:" name="ratio" selected={ratio} onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
+        <Dropdown2 options={options.steps} label="Steps:" name="steps" selected={steps} onChange={(e: any) => { setSteps(() => e.target.value) }}></Dropdown2>
+        <Dropdown2 options={options.range} label="Range" name="range" selected={noteRange} onChange={(e:any) => setNoteRange(e.target.value) }></Dropdown2>
+        <Dropdown2 options={options.octaves} label="Octave:" name="octave" selected={octave} onChange={(e: any) => { setOctave(() => e.target.value) }} ></Dropdown2>
+        <Dropdown2 options={options.notes} label="Base Note:" name="" selected={rootNote} onChange={(e: any) => { setRootNote(() => e.target.value) }} ></Dropdown2>
+        <Dropdown2 options={options.scales} label="Scale:" selected={scaleName} name={scaleName} onChange={(e: any) => {
+          setScaleName(e.target.value)
+          setScale(() => {
+            return scales[e.target.value as keyof typeof scales]
+          })
+        }}></Dropdown2>
       </div>
 
     </div >

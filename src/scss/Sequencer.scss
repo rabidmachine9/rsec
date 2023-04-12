@@ -1,11 +1,14 @@
 .sequencer-container {
 
   .sequencer {
+    &.collapse{
+      display:none !important;
+    }
     display: grid;
     grid-template-columns: repeat(8, 50px);
     grid-gap: 10px;
     padding: pad(1);
-
+    
     button {
       padding: 5px;
       font-size: 18px;

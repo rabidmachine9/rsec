@@ -2,6 +2,7 @@ import React, { useState, useEffect, FunctionComponent } from 'react';
 import { PlayButton } from './PlayButton';
 import { arrayRemove, bpmToMs } from '../functions/f'
 import { Dropdown, Dropdown2 } from './Dropdown';
+import { Checkbox } from './Checkbox'
 import { Notes } from '../functions/notes';
 import { Scales, scales } from '../functions/scales';
 import { options } from '../functions/options'
@@ -26,7 +27,7 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
   const [scaleName, setScaleName] = useState<string>(() => 'harmonic')
   const [scale, setScale] = useState<Array<number>>(() => scales[scaleName as keyof typeof scales])
   const [channel, setChannel] = useState(1)
-
+  const [collapse, setCollapse] = useState(false)
 
   useEffect(() => {
     setBaseNoteNumber(harmony.symbolToMidi(rootNote, octave))
@@ -121,7 +122,7 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
 
 
   return (
-    <div className="sequencer-container">
+    <div className="sequencer-container"  >
 
       <div className="sequencer" id="grid" style={{ gridTemplateColumns: "repeat(" + steps + ",40px)" }}>
         {renderSeqButtons(noteRange, steps)}
@@ -141,6 +142,17 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
             return scales[e.target.value as keyof typeof scales]
           })
         }}></Dropdown2>
+        <Checkbox label="Collapse" name="collapse" onChange={(e: any) => {
+          setCollapse(() => {
+            console.log(document.body)
+            let seqCont = e.target.closest('.sequencer-container')
+            console.log(seqCont)
+            let seqGrid =  seqCont.querySelector('#grid')
+            console.log(seqGrid)
+            seqGrid.classList.toggle('collapse')
+            return e.target.value
+          })
+        }}></Checkbox>
       </div>
     </div >
   )

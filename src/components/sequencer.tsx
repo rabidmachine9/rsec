@@ -25,7 +25,7 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
   const [baseNoteNumber, setBaseNoteNumber] = useState(harmony.symbolToMidi(rootNote, octave))
   const [scaleName, setScaleName] = useState<string>(() => 'harmonic')
   const [scale, setScale] = useState<Array<number>>(() => scales[scaleName as keyof typeof scales])
-
+  const [channel, setChannel] = useState(1)
 
 
   useEffect(() => {
@@ -128,12 +128,13 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
       </div>
 
       <div className="button-container">
-        <PlayButton sequence={sequence} timeInterval={timeInterval} ></PlayButton>
+        <PlayButton sequence={sequence} channel={channel} timeInterval={timeInterval} ></PlayButton>
+        <Dropdown options={options.channels} label="Midi Channel:" name="channel" selected={channel} onChange={(e: any): void =>{ setChannel(() => e.target.value)}} ></Dropdown>
         <Dropdown options={options.ratio} label="Ratio:" name="ratio" selected={ratio} onChange={(e: any): void => onRatioChange(e)} ></Dropdown>
         <Dropdown2 options={options.steps} label="Steps:" name="steps" selected={steps} onChange={(e: any) => { setSteps(() => e.target.value) }}></Dropdown2>
         <Dropdown2 options={options.range} label="Range" name="range" selected={noteRange} onChange={(e:any) => setNoteRange(e.target.value) }></Dropdown2>
         <Dropdown2 options={options.octaves} label="Octave:" name="octave" selected={octave} onChange={(e: any) => { setOctave(() => e.target.value) }} ></Dropdown2>
-        <Dropdown2 options={options.notes} label="Base Note:" name="" selected={rootNote} onChange={(e: any) => { setRootNote(() => e.target.value) }} ></Dropdown2>
+        <Dropdown2 options={options.notes} label="Root Note:" name="" selected={rootNote} onChange={(e: any) => { setRootNote(() => e.target.value) }} ></Dropdown2>
         <Dropdown2 options={options.scales} label="Scale:" selected={scaleName} name={scaleName} onChange={(e: any) => {
           setScaleName(e.target.value)
           setScale(() => {
@@ -141,7 +142,6 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
           })
         }}></Dropdown2>
       </div>
-
     </div >
   )
 }

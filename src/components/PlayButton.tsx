@@ -7,7 +7,8 @@ type ButtonProps = {
   text?: string,
   onClick?: MouseEventHandler,
   sequence: Array<Array<number>>,
-  timeInterval: number
+  timeInterval: number,
+  channel: number
 }
 
 
@@ -25,7 +26,7 @@ function colorSeqCol(col: number) {
   
 }
 
-export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequence, timeInterval }) => {
+export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequence, timeInterval, channel }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   
@@ -35,9 +36,9 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequ
 
     if (isPlaying) {
       intervalId = setInterval(() => {
-        sendMidiOff(sequence[currentStep])
+        sendMidiOff(sequence[currentStep], channel)
         colorSeqCol(currentStep)
-        sendMidiMessage(sequence[currentStep]);
+        sendMidiMessage(sequence[currentStep], channel);
         setCurrentStep((currentStep + 1) % sequence.length);
       }, timeInterval);
     }

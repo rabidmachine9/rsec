@@ -1,7 +1,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import './scss/styles.scss';
-import { Sequencer } from './components/sequencer'
 import { TopPanel } from './components/TopPanel';
+import { Groovebox } from './components/Groovebox';
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="App">
       <TopPanel bpm={bpm} changeBpm={changeBpm}></TopPanel>
-      <Sequencer bpm={bpm}></Sequencer>
+      <Groovebox bpm={bpm}></Groovebox>
     </div>
   );
 }

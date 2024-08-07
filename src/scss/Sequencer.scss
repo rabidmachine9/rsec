@@ -1,40 +1,48 @@
-.sequencer-container {
 
-  .sequencer {
-    &.collapse{
-      display:none !important;
+.sequencer {
+  &.collapse{
+    display:none !important;
+  }
+  display: grid;
+  grid-template-columns: repeat(16, 50px); 
+  grid-gap: 10px;
+  padding: pad(1);
+  justify-self: center;
+
+  .seq-button {
+    padding: 5px;
+    font-size: 18px;
+    background-color: white;
+    border: 1px solid $border-clr;
+    z-index: 10;
+    color: $font-clr;
+    height:50px;
+
+    &:nth-child(1),
+    &:nth-child(5),
+    &:nth-child(9),
+    &:nth-child(13)
+    {
+      background-color: red;
     }
-    display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-gap: 10px;
-    padding: pad(1);
-    
-    button {
-      padding: 5px;
-      font-size: 18px;
-      background-color: white;
-      border: 1px solid $border-clr;
-      z-index: 10;
-      color: $font-clr;
 
-      &.selected {
-        background-color: $selected-box;
-      }
+    &.selected {
+      background-color: $selected-box;
+    }
 
-      &.active {
-        //transition: all .1s ease-out;
-        border-color: $active-column;
-        border-width: 2px;
-      }
+    &.active {
+      //transition: all .1s ease-out;
+      border-color: $active-column;
+      border-width: 2px;
     }
   }
+}
 
-  .button-container {
-    padding: pad(1);
-    display: inline-flex;
+.button-container {
+  padding: pad(1) 0;
+  display: inline-flex;
 
-    label {
-      align-self: center;
-    }
+  label {
+    align-self: center;
   }
 }

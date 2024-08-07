@@ -1,16 +1,28 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
+import { PlayButton } from './PlayButton';
+import { Screen } from './Screen';
 import { arrayRemove, bpmToMs } from '../functions/f'
+import { Notes } from '../functions/notes';
+import { PreviousButton } from './PreviousButton';
+import { NextButton } from './NextButton';
+import { StopButton } from './StopButton';
+import { SoundSelect } from './SoundSelect';
 
-type SeqProps = {
+type GrooveProps = {
   bpm: number
 }
 
-export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
+
+
+export const Groovebox: FunctionComponent<GrooveProps> = ({ bpm }) => {
 
   const [steps, setSteps] = useState(16)
+  const [noteRange, setNoteRange] = useState(1)
   const [sequence, setSequence] = useState<Array<Array<number>>>([])
   const [ratio, setRatio] = useState(1)
   const [timeInterval, setTimeInterval] = useState(() => bpmToMs(bpm, ratio))
+
+  const [channel, setChannel] = useState(1)
 
 
   useEffect(() => {
@@ -71,7 +83,11 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
   }
 
 
-  function renderSeqButtons(steps: number) {
+
+ 
+
+
+  function renderSeqButtons(notesNum: number, steps: number) {
     let buttons = [];
 
       for (let i = 0; i < steps; i++) {
@@ -86,8 +102,20 @@ export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
 
 
   return (
-      <div className="sequencer" id="grid" >
-        {renderSeqButtons(steps)}
+    <div className="groovebox-container"  >
+    <div className="screen-button-container">
+        <Screen></Screen>
+        <div className="button-container">
+            <PlayButton sequence={sequence} channel={channel} timeInterval={timeInterval} ></PlayButton>
+            <StopButton></StopButton>
+            <PreviousButton  channel={channel}></PreviousButton>
+            <NextButton  channel={channel}></NextButton>        
+        </div>
       </div>
+      <SoundSelect></SoundSelect>
+      <div className="sequencer" id="grid" >
+        {renderSeqButtons(noteRange, steps)}
+      </div>
+    </div >
   )
 }

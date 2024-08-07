@@ -1,0 +1,14 @@
+.screen-button-container{
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+    padding-top: pad(1);
+    padding-bottom: pad(2);
+    .screen{
+        border:1px black solid;
+        width: 400px;
+        height: 200px;
+        padding: 5px;
+    }
+}

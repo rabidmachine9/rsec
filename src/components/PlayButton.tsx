@@ -1,7 +1,7 @@
 import React, { FunctionComponent, MouseEventHandler, useState, useEffect } from 'react';
 import { sendMidiMessage, sendMidiOff } from '../functions/f';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
+import PauseIcon from '@mui/icons-material/Pause';
 
 type ButtonProps = {
   text?: string,
@@ -58,7 +58,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequ
 
   return (
     <button onClick={isPlaying ? stop : play} className="moufa-button">
-      {(isPlaying ? <StopIcon /> : <PlayArrowIcon />)}
+      {(isPlaying ? <PauseIcon /> : <PlayArrowIcon />)}
     </button>
   );
 };

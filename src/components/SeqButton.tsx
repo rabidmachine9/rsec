@@ -29,9 +29,10 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({index}) => {
                 } 
             });
         }
-    }, [state.sequence, state.selectedSeqButton])
+    }, [state.sequence[state.selectedSeqButton].armed])
     const handleUpdateSelected = (e:any) => {
         dispatch({ type: 'SET_SELECTEDSEQBUTTON', payload: Number(e.target.getAttribute('data-column')) });
+
     }  
     const handleUpdateTriggered = (e:any) => {
         // Update the 'triggered' value

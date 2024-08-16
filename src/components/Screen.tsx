@@ -7,8 +7,8 @@ type ScreenProps = {
 export const Screen: FunctionComponent<ScreenProps> = ({}) => {
     const { state, dispatch } = useGlobalState(); 
 
-    const onChange = () =>{
-        console.log("123")
+    const onChange = (e: any) =>{
+        handleUpdateVelocity(e)
     }
 
     const handleUpdateVelocity = (e:any) => {

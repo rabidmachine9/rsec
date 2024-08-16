@@ -1,0 +1,31 @@
+.seq-button {
+    padding: 5px;
+    font-size: 18px;
+    background-color: white;
+    border: 1px solid $border-clr;
+    z-index: 10;
+    color: $font-clr;
+    height:50px;
+
+    &:nth-child(1),
+    &:nth-child(5),
+    &:nth-child(9),
+    &:nth-child(13)
+    {
+      background: linear-gradient(to top left, transparent 49.5%, black 50%, transparent 50.5%),
+                        linear-gradient(to top right, transparent 49.5%, black 50%, transparent 50.5%);
+    }
+    &.selected {
+      border-width: 2px;
+    }
+
+    &.armed {
+      background-color: $selected-box;
+    }
+
+    &.active {
+      //transition: all .1s ease-out;
+      border-color: $active-column;
+      border-width: 3px;
+    }
+  }

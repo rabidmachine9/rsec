@@ -2,13 +2,12 @@ import React, { FunctionComponent, MouseEventHandler, useState, useEffect } from
 import { sendMidiMessage, sendMidiOff } from '../functions/f';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import { useGlobalState } from './GlobalState';
+
 
 type ButtonProps = {
-  text?: string,
-  onClick?: MouseEventHandler,
   sequence: Array<Array<number>>,
   timeInterval: number,
-  channel: number
 }
 
 
@@ -26,19 +25,24 @@ function colorSeqCol(col: number) {
   
 }
 
-export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequence, timeInterval, channel }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+export const PlayButton: FunctionComponent<ButtonProps> = ({ sequence, timeInterval }) => {
+
+  const { state, dispatch } = useGlobalState();
+
+
+  const togglePlay = () => {
+    dispatch({ type: 'SET_PLAYING', payload: !state.playing });
+  };
+
   const [currentStep, setCurrentStep] = useState(0);
   
   useEffect(() => {
     let intervalId: ReturnType<typeof setInterval>;
 
 
-    if (isPlaying) {
+    if (state.playing) {
       intervalId = setInterval(() => {
-        sendMidiOff(sequence[currentStep], channel)
         colorSeqCol(currentStep)
-        sendMidiMessage(sequence[currentStep], channel);
         setCurrentStep((currentStep + 1) % sequence.length);
       }, timeInterval);
     }
@@ -46,19 +50,12 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({ text, onClick, sequ
     return () => {
       clearInterval(intervalId);
     };
-  }, [isPlaying, sequence, currentStep, timeInterval]);
+  }, [state.playing, sequence, currentStep, timeInterval]);
 
-  function play() {
-    setIsPlaying(!isPlaying);
-  }
-  function stop() {
-    setIsPlaying(false)
-    setCurrentStep(0)
-  }
 
   return (
-    <button onClick={isPlaying ? stop : play} className="moufa-button">
-      {(isPlaying ? <PauseIcon /> : <PlayArrowIcon />)}
+    <button onClick={togglePlay} className="moufa-button">
+      {(state.playing ? <PauseIcon /> : <PlayArrowIcon />)}
     </button>
   );
 };

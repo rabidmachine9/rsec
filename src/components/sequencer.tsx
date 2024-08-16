@@ -1,93 +1,26 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import { arrayRemove, bpmToMs } from '../functions/f'
+import { SeqButton } from './SeqButton'
+import { useGlobalState } from './GlobalState';
 
 type SeqProps = {
-  bpm: number
 }
 
-export const Sequencer: FunctionComponent<SeqProps> = ({ bpm }) => {
-
-  const [steps, setSteps] = useState(16)
-  const [sequence, setSequence] = useState<Array<Array<number>>>([])
-  const [ratio, setRatio] = useState(1)
-  const [timeInterval, setTimeInterval] = useState(() => bpmToMs(bpm, ratio))
-
-
-  useEffect(() => {
-    console.log(steps)
-    setSequence(() => gridToSeq(document.getElementById('grid')))
-  }, [steps])
-
-  useEffect(() => {
-    setTimeInterval(() => bpmToMs(bpm, ratio))
-  }, [bpm, ratio])
-
-  useEffect(() => {
-    setSequence(() => gridToSeq(document.getElementById('grid')))
-  }, []);
-
-  function gridToSeq(el: any) {
-    var seq: any = []
-    let buttons = el.querySelectorAll('.seq-button')
-
-    for (let i = 0; i < steps; i++) {
-      let noteSeq: any = []
-      buttons.forEach((btn: HTMLButtonElement) => {
-        if (Number(btn.dataset.column) === i) {
-          if (btn.classList.contains('selected'))
-            noteSeq.push(btn.dataset.note)
-        }
-      })
-      seq.push(noteSeq)
-
-    }
-
-    console.log(seq)
-    return seq
-  }
-
-  function addToSeq(col: number, note: number) {
-    let seq = sequence
-    seq[col].push(note)
-    setSequence(seq)
-  }
-  function removeFromSeq(col: number, note: number) {
-    let seq = sequence
-    seq[col] = arrayRemove(seq[col], note)
-
-    setSequence(seq)
-  }
-
-  function onSeqStepClick(e: React.MouseEvent<HTMLButtonElement>) {
-    const target = e.target as HTMLElement;
-    target.classList.toggle('selected')
-    //let grid = document.getElementById('grid')
-    if (target.classList.contains('selected')) {
-      addToSeq(Number(target.dataset.column), Number(target.dataset.note))
-    }
-    else {
-      removeFromSeq(Number(target.dataset.column), Number(target.dataset.note))
-    }
-  }
-
-
-  function renderSeqButtons(steps: number) {
-    let buttons = [];
-
-      for (let i = 0; i < steps; i++) {
-        buttons.push(
-          <button className="seq-button"  data-column={i}  onClick={onSeqStepClick} key={'' + i}>
-          </button>
-        )
-      }
-    
-    return buttons
-  }
-
+export const Sequencer: FunctionComponent<SeqProps> = ({}) => {
+  const { state, dispatch } = useGlobalState();
 
   return (
       <div className="sequencer" id="grid" >
-        {renderSeqButtons(steps)}
+        {state.sequence.map((button, index) => (
+          <SeqButton index={index}></SeqButton>
+                // <button
+                //     key={index}
+                //     className={`seq-button ${state.selectedSeqButton === index ? 'selected' : ''} ${state.sequence[state.selectedSeqButton].get('armed') == index ? 'armed' : ''}`}
+                //     data-column={index}
+                //     // onClick={(e) => onClick(e, index)}
+                // >
+                // </button>
+            ))}
       </div>
   )
 }

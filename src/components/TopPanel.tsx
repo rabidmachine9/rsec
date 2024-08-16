@@ -1,18 +1,32 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useState, useEffect} from 'react';
+import { useGlobalState } from './GlobalState';
+
 
 type TopPanelProps = {
-    bpm: number,
-    changeBpm:any
 }
 
 
-export const  TopPanel:FunctionComponent<TopPanelProps> = ({bpm, changeBpm}) =>  {
-  return (
+export const  TopPanel:FunctionComponent<TopPanelProps> = ({}) =>  {
+  const { state, dispatch } = useGlobalState();
 
-      <div className='top-panel'>
-        <label htmlFor="bpm">bpm:</label>
-        <input type="number" id="bpm" name="bpm" min="1" max="200" value={bpm} onChange={changeBpm}></input>
-      </div>
+
+  const handleUpdateBPM = (e: any) => {
+    dispatch({ type: 'SET_BPM', payload: e.target.value });
+  };
+
+
+  const handleUpdateMSInterval = () => {
+    dispatch({type: 'SET_MSINTERVAL', payload: state.bpm / 6000});
+  };
+  useEffect(() => {
+    handleUpdateMSInterval()
+  }, [state.bpm])
+  return (
+    
+    <div className='top-panel'>
+      <label htmlFor="bpm">bpm:</label>
+      <input type="number" id="bpm" name="bpm" min="1" max="200" value={state.bpm} onChange={handleUpdateBPM}></input>
+    </div>
   );
 }
 

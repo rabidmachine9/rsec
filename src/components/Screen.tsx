@@ -16,8 +16,8 @@ export const Screen: FunctionComponent<ScreenProps> = ({}) => {
         dispatch({ 
             type: 'UPDATE_VELOCITY', 
             payload: { 
-                step: Number(state.sequence[state.selectedSeqButton].step), 
-                velocity: e.currentTarget.value,
+                step: Number(state.selectedSeqButton), 
+                velocity: Number(e.currentTarget.value),
             } 
         });
     }
@@ -26,7 +26,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({}) => {
             {"step: "+(Number(state.sequence[state.selectedSeqButton].step)+1)} <br/>
             {"triggered: "+String(state.sequence[state.selectedSeqButton].armed)}<br/>
             <label>velocity</label>
-            <input type="number" id="velocity" value={state.sequence[state.selectedSeqButton].velocity} onChange={onChange}></input>
+            <input type="number" max="127" min="0" id="velocity" value={state.sequence[state.selectedSeqButton].velocity} onChange={onChange}></input>
         </div>
         
     )

@@ -2,27 +2,23 @@ import React, { FunctionComponent, MouseEventHandler, useState } from 'react';
 import { SoundButton } from './SoundButton';
 
 type ButtonProps = {
-  text?: string,
-  onClick?: MouseEventHandler,
 }
 
 
-export const SoundSelect: FunctionComponent<ButtonProps> = ({ text, onClick }) => {
+export const SoundSelect: FunctionComponent<ButtonProps> = ({ }) => {
     
     
-    const [activeId, setActiveId] = useState('BD');
 
-    
 
     return (
         <div className="sound-select">
-            <SoundButton text="BD" active={activeId} updateActive={setActiveId} ></SoundButton>
-            <SoundButton text="SD" active={activeId} updateActive={setActiveId} ></SoundButton>
-            <SoundButton text="HH" active={activeId} updateActive={setActiveId} ></SoundButton>
-            <SoundButton text="CL" active={activeId} updateActive={setActiveId}  ></SoundButton>
-            <SoundButton text="CR" active={activeId} updateActive={setActiveId} ></SoundButton>
-            <SoundButton text="RD" active={activeId} updateActive={setActiveId} ></SoundButton>
-            <SoundButton text="TM" active={activeId} updateActive={setActiveId} ></SoundButton>
+            <SoundButton text="BD" channel={0}   ></SoundButton>
+            <SoundButton text="SD" channel={1}   ></SoundButton>
+            <SoundButton text="HH" channel={2}   ></SoundButton>
+            <SoundButton text="CL" channel={3}    ></SoundButton>
+            <SoundButton text="CR" channel={4}   ></SoundButton>
+            <SoundButton text="RD" channel={5}   ></SoundButton>
+            <SoundButton text="TM" channel={6}   ></SoundButton>
         </div>
     );
 };

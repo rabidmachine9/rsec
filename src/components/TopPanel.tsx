@@ -16,7 +16,7 @@ export const  TopPanel:FunctionComponent<TopPanelProps> = ({}) =>  {
 
 
   const handleUpdateMSInterval = () => {
-    dispatch({type: 'SET_MSINTERVAL', payload: state.bpm / 6000});
+    dispatch({type: 'SET_MSINTERVAL', payload: 60000 / state.bpm });
   };
   useEffect(() => {
     handleUpdateMSInterval()

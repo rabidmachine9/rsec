@@ -1,19 +1,21 @@
 import React, { FunctionComponent, MouseEventHandler } from 'react';
 import PreviousIcon from '@mui/icons-material/SkipPrevious';
-
+import { useGlobalState } from './GlobalState';
 
 type ButtonProps = {
-  text?: string,
-  onClick?: MouseEventHandler,
   channel: number
 }
 
 
-export const PreviousButton: FunctionComponent<ButtonProps> = ({ text, onClick, channel }) => {
-  
+export const PreviousButton: FunctionComponent<ButtonProps> = ({ channel }) => {
+  const { state, dispatch } = useGlobalState(); 
+
+  const onClick = (e: any) =>{
+    dispatch({ type: 'SET_SELECTEDSEQBUTTON', payload: ((state.selectedSeqButton - 1) + state.sequence.length) % state.sequence.length  });
+  }
   return (
     <button  className="moufa-button">
-       <PreviousIcon />
+       <PreviousIcon onClick={onClick}/>
     </button>
   );
 };

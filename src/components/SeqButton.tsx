@@ -11,28 +11,21 @@ type ButtonProps = {
 
 
 export const SeqButton: FunctionComponent<ButtonProps> = ({index}) => {
-    const [sequence, setSequence] = useState<Array<Array<number>>>([])  
     const { state, dispatch } = useGlobalState();
 
     useEffect(() => {
-        const selectedStep = state.sequence[state.selectedSeqButton];
-        if (selectedStep) {
-            const step = selectedStep.step;
-            const triggered = selectedStep.armed;
-            const velocity = triggered ? 120 : 0;
-    
-            dispatch({ 
-                type: 'UPDATE_VELOCITY', 
-                payload: { 
-                    step, 
-                    velocity
-                } 
-            });
-        }
+
+        dispatch({ 
+            type: 'UPDATE_VELOCITY', 
+            payload: { 
+                step: state.selectedSeqButton, 
+                velocity: state.sequence[state.selectedSeqButton].armed ? 120 : 0
+            } 
+        });
     }, [state.sequence[state.selectedSeqButton].armed])
+
     const handleUpdateSelected = (e:any) => {
         dispatch({ type: 'SET_SELECTEDSEQBUTTON', payload: Number(e.target.getAttribute('data-column')) });
-
     }  
     const handleUpdateTriggered = (e:any) => {
         // Update the 'triggered' value
@@ -40,7 +33,7 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({index}) => {
             type: 'UPDATE_ARMED', 
             payload: { 
                 step: Number(e.target.getAttribute('data-column')), 
-                armed: (e.currentTarget.classList.contains(('armed')) ? true : false),
+                armed: !state.sequence[state.selectedSeqButton].armed,
             } 
         });
     }  
@@ -60,11 +53,11 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({index}) => {
 
     return (
         <button
-                key={index}
-                className={`seq-button ${state.selectedSeqButton === index ? 'selected ' : ''} ${state.sequence[index].armed ? 'armed' : ''}`}
-                data-column={index}
-                onClick={(e) => onClick(e)}
-            >
+            key={index}
+            className={`seq-button ${state.selectedSeqButton === index ? 'selected ' : ''} ${state.sequence[index].armed ? 'armed ' : ''} ${state.activeStep === index ? 'active ' : ''}`}
+            data-column={index}
+            onClick={(e) => onClick(e)}
+        >
         </button>
     );
 };

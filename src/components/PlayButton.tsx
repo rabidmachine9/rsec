@@ -6,8 +6,6 @@ import { useGlobalState } from './GlobalState';
 
 
 type ButtonProps = {
-  sequence: Array<Array<number>>,
-  timeInterval: number,
 }
 
 
@@ -25,14 +23,19 @@ function colorSeqCol(col: number) {
   
 }
 
-export const PlayButton: FunctionComponent<ButtonProps> = ({ sequence, timeInterval }) => {
+export const PlayButton: FunctionComponent<ButtonProps> = ({}) => {
 
   const { state, dispatch } = useGlobalState();
 
 
   const togglePlay = () => {
+    console.log(state.msInterval)
     dispatch({ type: 'SET_PLAYING', payload: !state.playing });
   };
+
+  const updateStep = () => {
+    dispatch({ type: 'UPDATE_ACTIVE', payload: (state.activeStep + 1) % state.sequence.length });
+  }
 
   const [currentStep, setCurrentStep] = useState(0);
   
@@ -42,15 +45,15 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({ sequence, timeInter
 
     if (state.playing) {
       intervalId = setInterval(() => {
-        colorSeqCol(currentStep)
-        setCurrentStep((currentStep + 1) % sequence.length);
-      }, timeInterval);
+        colorSeqCol(state.activeStep)
+        updateStep()
+      }, state.msInterval);
     }
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [state.playing, sequence, currentStep, timeInterval]);
+  }, [state.playing, state.sequence, state.activeStep, state.msInterval]);
 
 
   return (

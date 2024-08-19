@@ -107,7 +107,7 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
     <div className="screen-button-container">
         <Screen></Screen>
         <div className="button-container">
-            <PlayButton sequence={sequence} timeInterval={timeInterval} ></PlayButton>
+            <PlayButton ></PlayButton>
             <StopButton></StopButton>
             <PreviousButton  channel={channel}></PreviousButton>
             <NextButton  channel={channel}></NextButton>        

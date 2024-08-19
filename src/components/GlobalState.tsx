@@ -6,13 +6,20 @@ interface SequenceStep {
     armed: boolean;
 }
 
+
+interface ChannelSequence {
+    sequence: Array<SequenceStep>
+}
 // Define the type for the global state
 type State = {
-    bpm: number;
-    msInterval: number;
-    sequence: Array<SequenceStep>;
+    bpm: number,
+    msInterval: number,
+    sequence: Array<SequenceStep>,
+    //channel: Array<ChannelSequence>,
     playing: boolean,
-    selectedSeqButton: number
+    selectedSeqButton: number,
+    activeStep: number,
+    selectedChannel: number
 };
 
 const defaultSequence = [];
@@ -34,16 +41,19 @@ type Action =
     | { type: 'SET_PLAYING'; payload: boolean }
     | { type: 'UPDATE_VELOCITY'; payload: { step: number; velocity: number } }
     | { type: 'UPDATE_ARMED'; payload: { step: number; armed: boolean } }
+    | { type: 'UPDATE_ACTIVE'; payload: number  }
+    | { type: 'SET_CHANNEL'; payload: number  }
     ;
 
 // Create the initial state
 const initialState: State = {
     bpm: 120,
-    msInterval: 120/60000,
+    msInterval: 600.0/120.0,
     selectedSeqButton:0,
     sequence: defaultSequence,
     playing: false,
-   
+    activeStep: -1,
+    selectedChannel: 0
 };
 
 // Create the reducer function
@@ -51,6 +61,8 @@ const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'SET_BPM':
             return { ...state, bpm: action.payload };
+        case 'UPDATE_ACTIVE':
+            return { ...state, activeStep: action.payload };
         case 'SET_MSINTERVAL':
             return { ...state, msInterval: action.payload };
         case 'SET_SEQUENCE':
@@ -59,6 +71,8 @@ const reducer = (state: State, action: Action): State => {
             return { ...state, playing: action.payload}
         case 'SET_SELECTEDSEQBUTTON':
             return { ...state, selectedSeqButton: action.payload}
+        case 'SET_CHANNEL':
+            return { ...state, selectedChannel: action.payload}
         case 'UPDATE_ARMED':
             return {
                 ...state,

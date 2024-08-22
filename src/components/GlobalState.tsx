@@ -7,15 +7,20 @@ interface SequenceStep {
 }
 
 
-interface ChannelSequence {
-    sequence: Array<SequenceStep>
+interface Channel {
+    sequence: Array<SequenceStep>;
+    midiChannel: number;
 }
+
+// interface ChannelSequence {
+//     sequence: Array<SequenceStep>
+// }
 // Define the type for the global state
 type State = {
     bpm: number,
     msInterval: number,
     sequence: Array<SequenceStep>,
-    //channel: Array<ChannelSequence>,
+    channel: Array<Channel>,
     playing: boolean,
     selectedSeqButton: number,
     activeStep: number,
@@ -32,6 +37,8 @@ for (let i = 0; i < 16; i++) {
     });
 }
 
+
+
 // Define the type for actions
 type Action =
     | { type: 'SET_BPM'; payload: number }
@@ -43,6 +50,8 @@ type Action =
     | { type: 'UPDATE_ARMED'; payload: { step: number; armed: boolean } }
     | { type: 'UPDATE_ACTIVE'; payload: number  }
     | { type: 'SET_CHANNEL'; payload: number  }
+    | { type: 'SET_CHANNEL_ARMED'; payload: { channelIndex: number; stepIndex: number; armed: boolean }  }
+    | { type: 'SET_CHANNEL_VELOCITY'; payload: { channelIndex: number; stepIndex: number; velocity: number }  }
     ;
 
 // Create the initial state
@@ -51,6 +60,7 @@ const initialState: State = {
     msInterval: 600.0/120.0,
     selectedSeqButton:0,
     sequence: defaultSequence,
+    channel: Array(7).fill({sequence: defaultSequence, midiChannel: -1}),
     playing: false,
     activeStep: -1,
     selectedChannel: 0
@@ -90,6 +100,46 @@ const reducer = (state: State, action: Action): State => {
                         ? { ...item, velocity: action.payload.velocity }
                         : item
                 ),
+        };
+        case 'SET_CHANNEL_ARMED': {
+            const { channelIndex, stepIndex, armed } = action.payload;
+
+            // Update the specific sequence step's armed property in the selected channel
+            const updatedChannel = state.channel.map((channel, chIndex) => {
+                if (chIndex === channelIndex) {
+                    // Update the specific step in the channel
+                    const updatedSequence = channel.sequence.map((step, stIndex) =>
+                        stIndex === stepIndex ? { ...step, armed } : step
+                    );
+                    return { ...channel, sequence: updatedSequence };
+                }
+                return channel;
+            });
+
+            return {
+                ...state,
+                channel: updatedChannel,
+            };
+        }
+        case 'SET_CHANNEL_VELOCITY': {
+            const { channelIndex, stepIndex, velocity } = action.payload;
+
+            // Create a new channel array with the updated armed value
+            const updatedChannel = state.channel.map((channel, chIndex) => {
+                if (chIndex === channelIndex) {
+                    // Update the specific step in the channel
+                    const updatedSequence = channel.sequence.map((step, stIndex) =>
+                        stIndex === stepIndex ? { ...step, velocity } : step
+                    );
+                    return { ...channel, sequence: updatedSequence };
+                }
+                return channel;
+            });
+
+            return {
+                ...state,
+                channel: updatedChannel,
+            };
         };
         default:
             return state;

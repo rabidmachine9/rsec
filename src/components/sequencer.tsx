@@ -11,9 +11,13 @@ export const Sequencer: FunctionComponent<SeqProps> = ({}) => {
 
   return (
       <div className="sequencer" id="grid" >
-        {state.sequence.map((button, index) => (
-          <SeqButton index={index}></SeqButton>
-        ))}
+        
+        {state.channel[state.selectedChannel].sequence.map((button,index) => {          
+          return (
+            <SeqButton key={index} index={index} button={button}></SeqButton>
+          );
+          
+        })}
       </div>
   )
 }

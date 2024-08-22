@@ -27,7 +27,7 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
 
 
     useEffect(() => {
-        console.log(steps)
+        //console.log(steps)
         setSequence(() => gridToSeq(document.getElementById('grid')))
     }, [steps])
 
@@ -55,7 +55,7 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
 
         }
 
-        console.log(seq)
+        //console.log(seq)
         return seq
     }
 

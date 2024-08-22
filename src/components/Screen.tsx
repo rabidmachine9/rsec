@@ -7,26 +7,27 @@ type ScreenProps = {
 export const Screen: FunctionComponent<ScreenProps> = ({}) => {
     const { state, dispatch } = useGlobalState(); 
 
-    const onChange = (e: any) =>{
+    const onChange = (e: any) => {
         handleUpdateVelocity(e)
     }
 
     const handleUpdateVelocity = (e:any) => {
         // Update the 'triggered' value
         dispatch({ 
-            type: 'UPDATE_VELOCITY', 
+            type: 'SET_CHANNEL_VELOCITY', 
             payload: { 
-                step: Number(state.selectedSeqButton), 
+                channelIndex: state.selectedChannel,
+                stepIndex: Number(state.selectedSeqButton), 
                 velocity: Number(e.currentTarget.value),
             } 
         });
     }
     return (
         <div className="screen">
-            {"step: "+(Number(state.sequence[state.selectedSeqButton].step)+1)} <br/>
-            {"triggered: "+String(state.sequence[state.selectedSeqButton].armed)}<br/>
+            {"step: "+(Number(state.selectedSeqButton+1))} <br/>
+            {"triggered: "+String(state.channel[state.selectedChannel].sequence[state.selectedSeqButton].armed)}<br/>
             <label>velocity</label>
-            <input type="number" max="127" min="0" id="velocity" value={state.sequence[state.selectedSeqButton].velocity} onChange={onChange}></input>
+            <input type="number" max="127" min="0" id="velocity" value={state.channel[state.selectedChannel].sequence[state.selectedSeqButton].velocity} onChange={onChange}></input>
         </div>
         
     )

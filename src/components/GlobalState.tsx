@@ -52,6 +52,7 @@ type Action =
     | { type: 'SET_CHANNEL'; payload: number  }
     | { type: 'SET_CHANNEL_ARMED'; payload: { channelIndex: number; stepIndex: number; armed: boolean }  }
     | { type: 'SET_CHANNEL_VELOCITY'; payload: { channelIndex: number; stepIndex: number; velocity: number }  }
+    | { type: 'SET_CHANNEL_MIDI'; payload: { channelIndex: number; midiChannel: number }  }
     ;
 
 // Create the initial state
@@ -132,6 +133,24 @@ const reducer = (state: State, action: Action): State => {
                         stIndex === stepIndex ? { ...step, velocity } : step
                     );
                     return { ...channel, sequence: updatedSequence };
+                }
+                return channel;
+            });
+
+            return {
+                ...state,
+                channel: updatedChannel,
+            };
+        };
+        case 'SET_CHANNEL_MIDI': {
+            const { channelIndex, midiChannel } = action.payload;
+
+            // Create a new channel array with the updated armed value
+            const updatedChannel = state.channel.map((channel, chIndex) => {
+                if (chIndex === channelIndex) {
+                    // Update the specific step in the channel
+                    
+                    return { ...channel, midiChannel: midiChannel };
                 }
                 return channel;
             });

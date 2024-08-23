@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, ReactNode, Dispatch } from 'react';
+import { MidiDevice } from '../functions/types';
 
 interface SequenceStep {
     step: number;
@@ -24,7 +25,8 @@ type State = {
     playing: boolean,
     selectedSeqButton: number,
     activeStep: number,
-    selectedChannel: number
+    selectedChannel: number,
+    midiDevice?: MidiDevice
 };
 
 const defaultSequence = [];
@@ -42,6 +44,7 @@ for (let i = 0; i < 16; i++) {
 // Define the type for actions
 type Action =
     | { type: 'SET_BPM'; payload: number }
+    | { type: 'SET_MIDI_DEVICE'; payload: MidiDevice }
     | { type: 'SET_MSINTERVAL'; payload: number }
     | { type: 'SET_SELECTEDSEQBUTTON'; payload: number }
     | { type: 'SET_SEQUENCE'; payload:Array<SequenceStep> }
@@ -72,6 +75,8 @@ const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'SET_BPM':
             return { ...state, bpm: action.payload };
+        case 'SET_MIDI_DEVICE':
+            return { ...state, midiDevice: action.payload };
         case 'UPDATE_ACTIVE':
             return { ...state, activeStep: action.payload };
         case 'SET_MSINTERVAL':

@@ -2,6 +2,8 @@ import React, {FunctionComponent, useState, useEffect} from 'react';
 import { MidiDeviceSelector } from './MidiDeviceSelector';
 import { useGlobalState } from './GlobalState';
 import { MidiDevice } from '../functions/types';
+import { bpmToMs } from '../functions/f';
+
 
 type TopPanelProps = {
 }
@@ -25,7 +27,7 @@ export const  TopPanel:FunctionComponent<TopPanelProps> = ({}) =>  {
 
 
   const handleUpdateMSInterval = () => {
-    dispatch({type: 'SET_MSINTERVAL', payload: 60000 / state.bpm });
+    dispatch({type: 'SET_MSINTERVAL', payload: bpmToMs(state.bpm, 4) });
   };
   useEffect(() => {
     handleUpdateMSInterval()

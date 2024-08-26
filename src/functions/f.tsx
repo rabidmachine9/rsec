@@ -1,5 +1,5 @@
 export function bpmToMs(bpm: number, ratio: number) {
-  return (60000 / bpm) * ratio
+  return (60000 / bpm) / ratio
 }
 
 

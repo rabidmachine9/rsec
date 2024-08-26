@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, ReactNode, Dispatch } from 'react';
 import { MidiDevice } from '../functions/types';
+import { bpmToMs } from '../functions/f';
 
 interface SequenceStep {
     step: number;
@@ -64,7 +65,7 @@ type Action =
 // Create the initial state
 const initialState: State = {
     bpm: 120,
-    msInterval: 600.0/120.0,
+    msInterval: bpmToMs(120, 4),
     selectedSeqButton:0,
     sequence: defaultSequence,
     channel: Array(7).fill({sequence: defaultSequence, midiChannel: -1}),
@@ -72,6 +73,7 @@ const initialState: State = {
     activeStep: -1,
     selectedChannel: 0
 };
+
 
 // Create the reducer function
 const reducer = (state: State, action: Action): State => {
@@ -199,7 +201,7 @@ const GlobalStateContext = createContext<{ state: State; dispatch: Dispatch<Acti
 // Create a provider component
 const GlobalStateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
+    console.log("MS", state.msInterval)
     return (
         <GlobalStateContext.Provider value={{ state, dispatch }}>
             {children}

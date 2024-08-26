@@ -53,7 +53,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({}) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [state.playing, state.sequence, state.activeStep, state.msInterval]);
+  }, [state.playing, state.sequence, state.activeStep]);
 
 
   return (

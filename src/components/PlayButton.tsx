@@ -1,5 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, useState, useEffect } from 'react';
-import { sendMidiMessage, sendMidiOff } from '../functions/f';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { useGlobalState } from './GlobalState';

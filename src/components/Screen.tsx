@@ -50,7 +50,8 @@ export const Screen: FunctionComponent<ScreenProps> = ({selectedChannel}) => {
             <input type="number" max="9" min="0" id="midiChannel" value={selectedChannel.midiChannel} onChange={handleUpdateMidiChannel}></input><br/>
             <label>Chance</label>
             <input style={{ width: '45px' }} type="number" max="100" min="1" id="chance" value={selectedChannel.sequence[state.selectedSeqButton].chance} onChange={handleChanceUpdate}></input>
-            <span>%</span> 
+            <span>%</span> <br />
+            <label>Sound:</label> {state.channel[state.selectedChannel].soundFile}
         </div>
         
     )

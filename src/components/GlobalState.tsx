@@ -13,6 +13,8 @@ interface SequenceStep {
 interface Channel {
     sequence: Array<SequenceStep>;
     midiChannel: number;
+    soundFile: string;
+    name: string;
 }
 
 // interface ChannelSequence {
@@ -31,7 +33,7 @@ type State = {
     midiDevice?: MidiDevice
 };
 
-const defaultSequence = [];
+const defaultSequence: SequenceStep[] = [];
 
 for (let i = 0; i < 16; i++) {
     defaultSequence.push({
@@ -60,6 +62,7 @@ type Action =
     | { type: 'SET_STEP_CHANCE'; payload: { channelIndex: number; stepIndex: number; chance: number }  }
     | { type: 'SET_CHANNEL_VELOCITY'; payload: { channelIndex: number; stepIndex: number; velocity: number }  }
     | { type: 'SET_CHANNEL_MIDI'; payload: { channelIndex: number; midiChannel: number }  }
+    | { type: 'SET_CHANNEL_NAME'; payload: { channelIndex: number; name: string }  }
     ;
 
 // Create the initial state
@@ -68,7 +71,12 @@ const initialState: State = {
     msInterval: bpmToMs(120, 4),
     selectedSeqButton:0,
     sequence: defaultSequence,
-    channel: Array(7).fill({sequence: defaultSequence, midiChannel: -1}),
+    channel: Array(7).fill(null).map((_, index) => ({
+        sequence: defaultSequence,
+        midiChannel: -1,  // or any other way you want to use the index
+        soundFile: `sound_${index}.wav`, // You can customize this too based on the index
+        name: ''
+      })),
     playing: false,
     activeStep: -1,
     selectedChannel: 0
@@ -181,6 +189,24 @@ const reducer = (state: State, action: Action): State => {
                     // Update the specific step in the channel
                     
                     return { ...channel, midiChannel: midiChannel };
+                }
+                return channel;
+            });
+
+            return {
+                ...state,
+                channel: updatedChannel,
+            };
+        };
+        case 'SET_CHANNEL_NAME': {
+            const { channelIndex, name } = action.payload;
+
+            // Create a new channel array with the updated armed value
+            const updatedChannel = state.channel.map((channel, chIndex) => {
+                if (chIndex === channelIndex) {
+                    // Update the specific step in the channel
+                    
+                    return { ...channel, name: name };
                 }
                 return channel;
             });

@@ -10,6 +10,7 @@ import { SoundSelect } from './SoundSelect';
 import { useGlobalState } from './GlobalState';
 import { Sequencer } from './sequencer';
 import { SoundPlayer } from './SoundPlayer';
+import { FileList } from './FileList'
 
 type GrooveProps = {
   
@@ -118,6 +119,8 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
       </div>
       <SoundSelect></SoundSelect>
       <Sequencer></Sequencer>
+      <FileList />
     </div >
+    
   )
 }

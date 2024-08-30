@@ -14,8 +14,8 @@ export const SoundSelect: FunctionComponent<ButtonProps> = ({ }) => {
         <div className="sound-select">
             <SoundButton text="BD" channel={0}   ></SoundButton>
             <SoundButton text="SD" channel={1}   ></SoundButton>
-            <SoundButton text="HH" channel={2}   ></SoundButton>
-            <SoundButton text="CL" channel={3}    ></SoundButton>
+            <SoundButton text="HO" channel={2}   ></SoundButton>
+            <SoundButton text="HC" channel={3}   ></SoundButton>
             <SoundButton text="CR" channel={4}   ></SoundButton>
             <SoundButton text="RD" channel={5}   ></SoundButton>
             <SoundButton text="TM" channel={6}   ></SoundButton>

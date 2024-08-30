@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch } from 'react';
+import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch, useEffect } from 'react';
 import { useGlobalState } from './GlobalState';
 
 type ButtonProps = {
@@ -9,6 +9,11 @@ type ButtonProps = {
 
 export const SoundButton: FunctionComponent<ButtonProps> = ({ text, channel }) => {
     const { state, dispatch } = useGlobalState();
+
+    useEffect(() => {
+        // Dispatch an action to update the channel name when the component mounts
+        dispatch({ type: 'SET_CHANNEL_NAME', payload: { channelIndex: channel, name: text } });
+      }, []);
 
     const [id] = useState(text)
     const handleClick = (e: any) => {

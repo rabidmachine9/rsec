@@ -21,30 +21,30 @@ export const FileList = () => {
             console.error('Error fetching the files:', error);
         });
     }, []);
+    
+    const selectSound = (e: any, selectedChannel: number) => {
+        
+        dispatch({ type: 'SET_CHANNEL_FILE', payload: { channelIndex: selectedChannel , soundFile: e.currentTarget.textContent } });
+    }
 
     return (
         <div>
-        <h1>File List</h1>
-        <ul>
+        <div>Sounds</div>
             {Object.keys(files).map((folder) => {
             // If you want to filter by a specific folder, add an if statement here
             if (folder === state.channel[state.selectedChannel].name ) { // Replace 'BD' with your desired folder name
                 return (
-                <li key={folder}>
-                    <h2>{folder}</h2>
                     <ul>
                     {files[folder].map((file, index) => (
-                        <li key={index}>{file}</li>
+                        <li key={index} onClick={(e) => selectSound(e, state.selectedChannel)}>{file}</li>
                     ))}
                     </ul>
-                </li>
                 );
             }
 
             // Return null or handle other folders accordingly if not 'BD'
             return null;
             })}
-        </ul>
         </div>
     );
 };

@@ -54,8 +54,10 @@ type Action =
     | { type: 'SET_CHANNEL_VELOCITY'; payload: { channelIndex: number; stepIndex: number; velocity: number } }
     | { type: 'SET_CHANNEL_MIDI'; payload: { channelIndex: number; midiChannel: number } }
     | { type: 'SET_CHANNEL_NAME'; payload: { channelIndex: number; name: string } }
+    | { type: 'SET_CHANNEL_FILE'; payload: { channelIndex: number; soundFile: string } }
     | { type: 'SET_CHANNELS'; payload: Array<Channel> }
     | { type: 'SET_SOUND_FILES'; payload: { [key: string]: string[] } };
+
 
 // Create the initial state
 const initialState: State = {
@@ -175,6 +177,18 @@ const reducer = (state: State, action: Action): State => {
             const updatedChannel = state.channel.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     return { ...channel, name };
+                }
+                return channel;
+            });
+
+            return { ...state, channel: updatedChannel };
+        }
+        case 'SET_CHANNEL_FILE': {
+            const { channelIndex, soundFile } = action.payload;
+
+            const updatedChannel = state.channel.map((channel, chIndex) => {
+                if (chIndex === channelIndex) {
+                    return { ...channel, soundFile };
                 }
                 return channel;
             });

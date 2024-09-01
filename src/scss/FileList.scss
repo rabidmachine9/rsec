@@ -1,0 +1,15 @@
+.files-section {
+    .files-title {
+        font-size: large;
+    }
+    ul{
+        margin:0;
+        margin-top:pad(1);
+        li{
+            padding: pad(0.5) 0;
+        }
+        .selected-sound {
+            background-color: $uraninan;
+        }
+    }
+}

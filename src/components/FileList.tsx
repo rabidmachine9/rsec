@@ -28,15 +28,17 @@ export const FileList = () => {
     }
 
     return (
-        <div>
-        <div>Sounds</div>
+        <div className='files-section'>
+            <div className="files-title">Sounds</div>
             {Object.keys(files).map((folder) => {
             // If you want to filter by a specific folder, add an if statement here
             if (folder === state.channel[state.selectedChannel].name ) { // Replace 'BD' with your desired folder name
                 return (
-                    <ul>
+                    <ul className="fil-list">
                     {files[folder].map((file, index) => (
-                        <li key={index} onClick={(e) => selectSound(e, state.selectedChannel)}>{file}</li>
+                        <li key={index} onClick={(e) => selectSound(e, state.selectedChannel)} className={`file-name ${state.channel[state.selectedChannel].soundFile === file ? 'selected-sound ' : ''} `} >
+                            {file}
+                        </li>
                     ))}
                     </ul>
                 );

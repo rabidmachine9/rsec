@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobalState } from './GlobalState';
+import * as Tone from 'tone';
 
 interface FilesStructure {
     [folder: string]: string[];
@@ -22,6 +23,22 @@ export const FileList = () => {
         });
     }, []);
     
+    useEffect(() => {
+        const player = new Tone.Player(state.channel[state.selectedChannel].soundFile).toDestination();
+        const filePath = '/samples/'+ state.channel[state.selectedChannel].name +'/'+ state.channel[state.selectedChannel].soundFile;
+        player.load(filePath).then(() => {
+            console.log(`Loaded sound file: ${filePath}`);
+        }).catch(error => {
+            console.error(`Failed to load sound file: ${filePath}`, error);
+        });
+
+        // Save the player instance in the global state
+        dispatch({
+            type: 'SET_CHANNEL_PLAYER',
+            payload: { channelIndex: state.selectedChannel, player },
+        });
+    },[state.channel[state.selectedChannel].soundFile])
+
     const selectSound = (e: any, selectedChannel: number) => {
         console.log('sound selected')
         dispatch({ type: 'SET_CHANNEL_FILE', payload: { channelIndex: selectedChannel , soundFile: e.currentTarget.textContent } });

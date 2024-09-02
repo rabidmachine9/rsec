@@ -23,7 +23,7 @@ export const FileList = () => {
     }, []);
     
     const selectSound = (e: any, selectedChannel: number) => {
-        
+        console.log('sound selected')
         dispatch({ type: 'SET_CHANNEL_FILE', payload: { channelIndex: selectedChannel , soundFile: e.currentTarget.textContent } });
     }
 

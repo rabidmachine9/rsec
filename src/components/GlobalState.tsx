@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, ReactNode, Dispatch, useEffect } from 'react';
 import { MidiDevice } from '../functions/types';
 import { bpmToMs } from '../functions/f';
+import * as Tone from 'tone';
 
 interface SequenceStep {
     step: number;
@@ -14,6 +15,7 @@ interface Channel {
     midiChannel: number;
     soundFile: string;
     name: string;
+    player?: Tone.Player;
 }
 
 // Define the type for the global state
@@ -56,7 +58,8 @@ type Action =
     | { type: 'SET_CHANNEL_NAME'; payload: { channelIndex: number; name: string } }
     | { type: 'SET_CHANNEL_FILE'; payload: { channelIndex: number; soundFile: string } }
     | { type: 'SET_CHANNELS'; payload: Array<Channel> }
-    | { type: 'SET_SOUND_FILES'; payload: { [key: string]: string[] } };
+    | { type: 'SET_SOUND_FILES'; payload: { [key: string]: string[] } }
+    | { type: 'SET_CHANNEL_PLAYER'; payload: { channelIndex: number; player: Tone.Player } };
 
 
 // Create the initial state
@@ -195,6 +198,14 @@ const reducer = (state: State, action: Action): State => {
 
             return { ...state, channel: updatedChannel };
         }
+        // Inside your reducer
+        case 'SET_CHANNEL_PLAYER': {
+            const { channelIndex, player } = action.payload;
+            const updatedChannel = state.channel.map((channel, index) =>
+                index === channelIndex ? { ...channel, player } : channel
+            );
+            return { ...state, channel: updatedChannel };
+        }
         case 'SET_CHANNELS':
             return { ...state, channel: action.payload };
         case 'SET_SOUND_FILES':
@@ -227,7 +238,7 @@ const GlobalStateProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     }))
                 });
             });
-    }, [dispatch]);
+    }, []);
 
     return (
         <GlobalStateContext.Provider value={{ state, dispatch }}>

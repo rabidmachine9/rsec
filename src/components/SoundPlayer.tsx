@@ -12,7 +12,8 @@ export const SoundPlayer: React.FC = () => {
             state.channel.forEach((channel, index) => {
             const probability =  channel.sequence[state.activeStep].chance > (Math.random() * 100);
                 if (channel.sequence[state.activeStep]?.armed && channel.player?.loaded && probability) {
-                    const velocityVol = velocityToDb(channel.sequence[state.activeStep]?.velocity);
+                    const velocity = channel.sequence[state.activeStep]?.velocity - (((Math.random() * channel.sequence[state.activeStep]?.velocityRange) / 100) * channel.sequence[state.activeStep]?.velocity) 
+                    const velocityVol = velocityToDb(velocity);
                     channel.player.volume.value = velocityVol;
                     channel.player.start();
                 }

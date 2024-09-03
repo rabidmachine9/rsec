@@ -10,7 +10,8 @@ export const SoundPlayer: React.FC = () => {
     useEffect(() => {
         if (state.playing) {
             state.channel.forEach((channel, index) => {
-                if (channel.sequence[state.activeStep]?.armed && channel.player?.loaded) {
+            const probability =  channel.sequence[state.activeStep].chance > (Math.random() * 100);
+                if (channel.sequence[state.activeStep]?.armed && channel.player?.loaded && probability) {
                     const velocityVol = velocityToDb(channel.sequence[state.activeStep]?.velocity);
                     channel.player.volume.value = velocityVol;
                     channel.player.start();

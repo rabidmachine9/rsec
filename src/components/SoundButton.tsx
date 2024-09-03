@@ -1,6 +1,7 @@
 import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch, useEffect } from 'react';
 import { useGlobalState } from './GlobalState';
 import * as Tone from 'tone';
+import {velocityToDb} from '../functions/synth'; 
 
 type ButtonProps = {
   text: string,
@@ -18,7 +19,11 @@ export const SoundButton: FunctionComponent<ButtonProps> = ({ text, channel }) =
     
     useEffect(() => {
         if (!state.channel[state.selectedChannel].player) {
-            const player = new Tone.Player(state.channel[state.selectedChannel].soundFile).toDestination();
+            const player = new Tone.Player({
+                url: state.channel[state.selectedChannel].soundFile,
+                autostart: false
+            }).toDestination();
+
             const filePath = '/samples/'+ state.channel[state.selectedChannel].name +'/'+ state.channel[state.selectedChannel].soundFile;
             player.load(filePath).then(() => {
                 console.log(`Loaded sound file: ${filePath}`);

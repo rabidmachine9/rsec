@@ -24,7 +24,10 @@ export const FileList = () => {
     }, []);
     
     useEffect(() => {
-        const player = new Tone.Player(state.channel[state.selectedChannel].soundFile).toDestination();
+        const player = new Tone.Player({
+            url: state.channel[state.selectedChannel].soundFile,
+            autostart: false
+        }).toDestination();
         const filePath = '/samples/'+ state.channel[state.selectedChannel].name +'/'+ state.channel[state.selectedChannel].soundFile;
         player.load(filePath).then(() => {
             console.log(`Loaded sound file: ${filePath}`);

@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 
 
-const convertVelocityToDb = (velocity :number) => {
+export const velocityToDb = (velocity :number) => {
     const minDb = -35; // Minimum dB value (very quiet)
     const maxDb = 0;   // Maximum dB value (full volume)
     
@@ -14,7 +14,7 @@ const convertVelocityToDb = (velocity :number) => {
 
 // Function to play the kick drum
 export const playKick = (velocity :number) => {
-    const dbLevel = convertVelocityToDb(velocity); // Convert velocity to dB
+    const dbLevel = velocityToDb(velocity); // Convert velocity to dB
 
     // Create a volume node with the calculated dB level
     const volumeNode = new Tone.Volume(dbLevel).toDestination();
@@ -41,7 +41,7 @@ export const playKick = (velocity :number) => {
 
 
 export const playSnare = (velocity :number) => {
-    const normalizedVolume = convertVelocityToDb(velocity); // Convert velocity to a volume in dB
+    const normalizedVolume = velocityToDb(velocity); // Convert velocity to a volume in dB
 
     // Create a noise source for the snare
     const noise = new Tone.Noise("white").start();

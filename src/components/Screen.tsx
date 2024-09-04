@@ -11,7 +11,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({selectedChannel}) => {
     const handleUpdateVelocity = (e:any) => {
         // Update the 'triggered' value
         dispatch({ 
-            type: 'SET_CHANNEL_VELOCITY', 
+            type: 'SET_STEP_VELOCITY', 
             payload: { 
                 channelIndex: state.selectedChannel,
                 stepIndex: Number(state.selectedSeqButton), 
@@ -22,7 +22,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({selectedChannel}) => {
     const handleUpdateVelocityRange = (e:any) => {
         // Update the 'triggered' value
         dispatch({ 
-            type: 'SET_CHANNEL_VELOCITY_RANGE', 
+            type: 'SET_STEP_VELOCITY_RANGE', 
             payload: { 
                 channelIndex: state.selectedChannel,
                 stepIndex: Number(state.selectedSeqButton), 

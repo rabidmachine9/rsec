@@ -17,7 +17,7 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({button,index}) => {
     useEffect(() => {
 
         dispatch({ 
-            type: 'SET_CHANNEL_VELOCITY', 
+            type: 'SET_STEP_VELOCITY', 
             payload: {
                 channelIndex: Number(state.selectedChannel),
                 stepIndex: state.selectedSeqButton, 

@@ -11,6 +11,7 @@ import { useGlobalState } from './GlobalState';
 import { Sequencer } from './sequencer';
 import { SoundPlayer } from './SoundPlayer';
 import { FileList } from './FileList'
+import { ListenButton } from './ListenButton';
 
 type GrooveProps = {
   
@@ -111,6 +112,7 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
         <SoundPlayer />
         <Screen selectedChannel={state.channel[state.selectedChannel]}></Screen>
         <div className="button-container">
+            <ListenButton></ListenButton>
             <PlayButton ></PlayButton>
             <StopButton></StopButton>
             <PreviousButton  channel={channel}></PreviousButton>

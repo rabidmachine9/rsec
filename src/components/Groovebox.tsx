@@ -1,12 +1,11 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
-import { PlayButton } from './PlayButton';
+import { PlayButton } from './ButtonPlay';
 import { Screen } from './Screen';
 import { arrayRemove, bpmToMs } from '../functions/f'
-import { Notes } from '../functions/notes';
-import { PreviousButton } from './PreviousButton';
-import { NextButton } from './NextButton';
-import { StopButton } from './StopButton';
-import { SoundSelect } from './SoundSelect';
+import { PreviousButton } from './ButtonPrevious';
+import { NextButton } from './ButtonNext';
+import { StopButton } from './ButtonStop';
+import { ChannelSelect } from './ChannelSelect';
 import { useGlobalState } from './GlobalState';
 import { Sequencer } from './sequencer';
 import { SoundPlayer } from './SoundPlayer';
@@ -31,7 +30,6 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
 
 
     useEffect(() => {
-        //console.log(steps)
         setSequence(() => gridToSeq(document.getElementById('grid')))
     }, [steps])
 
@@ -63,49 +61,6 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
         return seq
     }
 
-    function addToSeq(col: number, note: number) {
-        let seq = sequence
-        seq[col].push(note)
-        setSequence(seq)
-    }
-    function removeFromSeq(col: number, note: number) {
-        let seq = sequence
-        seq[col] = arrayRemove(seq[col], note)
-
-        setSequence(seq)
-    }
-
-    function onSeqStepClick(e: React.MouseEvent<HTMLButtonElement>) {
-        const target = e.target as HTMLElement;
-        target.classList.toggle('selected')
-        //let grid = document.getElementById('grid')
-        if (target.classList.contains('selected')) {
-        addToSeq(Number(target.dataset.column), Number(target.dataset.note))
-        }
-        else {
-        removeFromSeq(Number(target.dataset.column), Number(target.dataset.note))
-        }
-  }
-
-
-
- 
-
-
-  function renderSeqButtons(notesNum: number, steps: number) {
-    let buttons = [];
-
-      for (let i = 0; i < steps; i++) {
-        buttons.push(
-          <button className="seq-button"  data-column={i}  onClick={onSeqStepClick} key={'' + i}>
-          </button>
-        )
-      }
-    
-    return buttons
-  }
-
-
   return (
     <div className="groovebox-container"  >
     <div className="screen-button-container">
@@ -119,7 +74,7 @@ export const Groovebox: FunctionComponent<GrooveProps> = ({  }) => {
             <NextButton  channel={channel}></NextButton>        
         </div>
       </div>
-      <SoundSelect></SoundSelect>
+      <ChannelSelect></ChannelSelect>
       <Sequencer></Sequencer>
       <FileList />
     </div >

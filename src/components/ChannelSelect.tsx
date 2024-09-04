@@ -1,5 +1,5 @@
 import React, { FunctionComponent, MouseEventHandler, useState } from 'react';
-import { SoundButton } from './SoundButton';
+import { SoundButton } from './ButtonSound';
 import { useGlobalState } from './GlobalState';
 
 
@@ -7,7 +7,7 @@ type ButtonProps = {
 }
 
 
-export const SoundSelect: FunctionComponent<ButtonProps> = ({ }) => {
+export const ChannelSelect: FunctionComponent<ButtonProps> = ({ }) => {
     
     const { state, dispatch } = useGlobalState();
     

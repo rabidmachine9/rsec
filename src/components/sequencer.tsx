@@ -1,6 +1,5 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
-import { arrayRemove, bpmToMs } from '../functions/f'
-import { SeqButton } from './SeqButton'
+import { SeqButton } from './ButtonSeq'
 import { useGlobalState } from './GlobalState';
 
 type SeqProps = {

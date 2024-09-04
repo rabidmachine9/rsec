@@ -33,7 +33,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({}) => {
   };
 
   const updateStep = () => {
-    dispatch({ type: 'UPDATE_ACTIVE', payload: (state.activeStep + 1) % state.sequence.length });
+    dispatch({ type: 'UPDATE_ACTIVE', payload: (state.activeStep + 1) % state.sequenceLength });
   }
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -52,7 +52,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({}) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [state.playing, state.sequence, state.activeStep]);
+  }, [state.playing, state.activeStep]);
 
 
   return (

@@ -4,7 +4,7 @@ import * as Tone from 'tone';
 
 interface FilesStructure {
     [folder: string]: string[];
-  }
+}
   
 
 export const FileList = () => {

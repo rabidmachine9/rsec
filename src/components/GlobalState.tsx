@@ -23,7 +23,7 @@ interface Channel {
 type State = {
     bpm: number;
     msInterval: number;
-    sequence: Array<SequenceStep>;
+    sequenceLength: number;
     channel: Array<Channel>;
     playing: boolean;
     selectedSeqButton: number;
@@ -70,7 +70,7 @@ const initialState: State = {
     bpm: 120,
     msInterval: bpmToMs(120, 4),
     selectedSeqButton: 0,
-    sequence: defaultSequence,
+    sequenceLength: 16,
     channel: Array(7).fill(null).map(() => ({
         sequence: defaultSequence,
         midiChannel: -1,
@@ -94,32 +94,12 @@ const reducer = (state: State, action: Action): State => {
             return { ...state, activeStep: action.payload };
         case 'SET_MSINTERVAL':
             return { ...state, msInterval: action.payload };
-        case 'SET_SEQUENCE':
-            return { ...state, sequence: action.payload };
         case 'SET_PLAYING':
             return { ...state, playing: action.payload };
         case 'SET_SELECTEDSEQBUTTON':
             return { ...state, selectedSeqButton: action.payload };
         case 'SET_CHANNEL':
             return { ...state, selectedChannel: action.payload };
-        case 'UPDATE_ARMED':
-            return {
-                ...state,
-                sequence: state.sequence.map((item) =>
-                    item.step === action.payload.step
-                        ? { ...item, armed: action.payload.armed }
-                        : item
-                ),
-            };
-        case 'UPDATE_VELOCITY':
-            return {
-                ...state,
-                sequence: state.sequence.map((item) =>
-                    item.step === action.payload.step
-                        ? { ...item, velocity: action.payload.velocity }
-                        : item
-                ),
-            };
         case 'SET_CHANNEL_ARMED': {
             const { channelIndex, stepIndex, armed } = action.payload;
 

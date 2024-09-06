@@ -4,11 +4,10 @@ import { useGlobalState } from './GlobalState';
 
 
 type ButtonProps = {
-  channel: number
 }
 
 
-export const NextButton: FunctionComponent<ButtonProps> = ({ channel }) => {
+export const NextButton: FunctionComponent<ButtonProps> = ({ }) => {
   const { state, dispatch } = useGlobalState(); 
 
   const onClick = (e: any) =>{

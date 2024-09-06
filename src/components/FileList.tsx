@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef  } from 'react';
 import { useGlobalState } from './GlobalState';
 import * as Tone from 'tone';
 
@@ -24,6 +24,7 @@ export const FileList = () => {
     }, []);
     
     useEffect(() => {
+
         const player = new Tone.Player({
             url: state.channel[state.selectedChannel].soundFile,
             autostart: false

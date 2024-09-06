@@ -49,8 +49,6 @@ type Action =
     | { type: 'SET_SELECTEDSEQBUTTON'; payload: number }
     | { type: 'SET_SEQUENCE'; payload: Array<SequenceStep> }
     | { type: 'SET_PLAYING'; payload: boolean }
-    | { type: 'UPDATE_VELOCITY'; payload: { step: number; velocity: number } }
-    | { type: 'UPDATE_ARMED'; payload: { step: number; armed: boolean } }
     | { type: 'UPDATE_ACTIVE'; payload: number }
     | { type: 'SET_CHANNEL'; payload: number }
     | { type: 'SET_CHANNEL_ARMED'; payload: { channelIndex: number; stepIndex: number; armed: boolean } }

@@ -1,5 +1,3 @@
-import { LabelRounded } from "@mui/icons-material"
-
 interface DropdownProps {
   name: string,
   label: string,

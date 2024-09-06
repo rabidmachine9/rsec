@@ -1,5 +1,5 @@
 import React, { FunctionComponent, MouseEventHandler, useState } from 'react';
-import { SoundButton } from './ButtonSound';
+import { ChannelButton } from './ButtonChannel';
 import { useGlobalState } from './GlobalState';
 
 
@@ -15,7 +15,7 @@ export const ChannelSelect: FunctionComponent<ButtonProps> = ({ }) => {
     return (
         <div className="sound-select">
             {state.channel.map((channel, index) => (
-                <SoundButton text={channel.name} channel={index}></SoundButton>
+                <ChannelButton text={channel.name} channel={index}></ChannelButton>
             ))}
         </div>
     );

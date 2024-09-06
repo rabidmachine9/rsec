@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch, useEffect } from 'react';
+import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch, useEffect, useRef } from 'react';
 import { useGlobalState } from './GlobalState';
 import * as Tone from 'tone';
 import {velocityToDb} from '../functions/synth'; 
@@ -9,7 +9,7 @@ type ButtonProps = {
 }
 
 
-export const SoundButton: FunctionComponent<ButtonProps> = ({ text, channel }) => {
+export const ChannelButton: FunctionComponent<ButtonProps> = ({ text, channel }) => {
     const { state, dispatch } = useGlobalState();
 
     useEffect(() => {
@@ -18,6 +18,8 @@ export const SoundButton: FunctionComponent<ButtonProps> = ({ text, channel }) =
       }, []);
     
     useEffect(() => {
+
+
         if (!state.channel[state.selectedChannel].player) {
             const player = new Tone.Player({
                 url: state.channel[state.selectedChannel].soundFile,

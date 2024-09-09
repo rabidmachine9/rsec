@@ -1,22 +1,17 @@
-import React, { useState, useEffect, FunctionComponent } from 'react';
-import { SeqButton } from './ButtonSeq'
-import { useGlobalState } from './GlobalState';
+import React, { useState, useEffect, FunctionComponent } from "react";
+import { SeqButton } from "./ButtonSeq";
+import { useGlobalState } from "./GlobalState";
 
-type SeqProps = {
-}
+type SeqProps = {};
 
 export const Sequencer: FunctionComponent<SeqProps> = ({}) => {
-  const { state, dispatch } = useGlobalState();
+    const { state, dispatch } = useGlobalState();
 
-  return (
-      <div className="sequencer" id="grid" >
-        
-        {state.channel[state.selectedChannel].sequence.map((button,index) => {          
-          return (
-            <SeqButton key={index} index={index} button={button}></SeqButton>
-          );
-          
-        })}
-      </div>
-  )
-}
+    return (
+        <div className="sequencer" id="grid">
+            {state.channel[state.selectedChannel].sequence.map((button, index) => {
+                return <SeqButton key={index} index={index} button={button}></SeqButton>;
+            })}
+        </div>
+    );
+};

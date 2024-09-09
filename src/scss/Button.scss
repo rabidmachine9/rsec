@@ -8,7 +8,7 @@
   font-weight: bold;
   margin-right: pad(1);
   &:hover {
-    transition: all .3s ease-out;
+    transition: all 0.3s ease-out;
     color: white;
     background-color: $bg-clr;
   }
@@ -18,4 +18,3 @@
     background-color: white;
   }
 }
-

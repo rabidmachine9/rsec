@@ -1,15 +1,10 @@
-
 .sequencer {
-  &.collapse{
-    display:none !important;
+  &.collapse {
+    display: none !important;
   }
   display: grid;
-  grid-template-columns: repeat(16, 50px); 
+  grid-template-columns: repeat(16, 50px);
   grid-gap: 10px;
   padding: pad(1);
   justify-self: center;
-
-  
 }
-
-

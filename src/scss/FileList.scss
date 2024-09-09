@@ -1,17 +1,17 @@
 .files-section {
-    .files-title {
-        font-size: large;
-        padding-left: pad(1);
+  .files-title {
+    font-size: large;
+    padding-left: pad(1);
+  }
+  ul {
+    margin: 0;
+    margin-top: pad(1);
+    li {
+      padding: pad(0.5);
+      width: fit-content;
     }
-    ul{
-        margin:0;
-        margin-top:pad(1);
-        li{
-            padding: pad(0.5);
-            width: fit-content;
-        }
-        .selected-sound {
-            background-color: $uraninan;
-        }
+    .selected-sound {
+      background-color: $uraninan;
     }
+  }
 }

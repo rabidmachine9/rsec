@@ -1,16 +1,11 @@
-import React, { FunctionComponent, MouseEventHandler, useState } from 'react';
-import { ChannelButton } from './ButtonChannel';
-import { useGlobalState } from './GlobalState';
+import React, { FunctionComponent, MouseEventHandler, useState } from "react";
+import { ChannelButton } from "./ButtonChannel";
+import { useGlobalState } from "./GlobalState";
 
+type ButtonProps = {};
 
-type ButtonProps = {
-}
-
-
-export const ChannelSelect: FunctionComponent<ButtonProps> = ({ }) => {
-    
+export const ChannelSelect: FunctionComponent<ButtonProps> = ({}) => {
     const { state, dispatch } = useGlobalState();
-    
 
     return (
         <div className="sound-select">

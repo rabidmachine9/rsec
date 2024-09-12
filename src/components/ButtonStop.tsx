@@ -18,8 +18,8 @@ export const StopButton: FunctionComponent<ButtonProps> = ({}) => {
     };
 
     return (
-        <button className="moufa-button">
-            <StopIcon onClick={() => onClick()} />
+        <button className="moufa-button" onClick={() => onClick()}>
+            <StopIcon />
         </button>
     );
 };

@@ -14,8 +14,8 @@ export const NextButton: FunctionComponent<ButtonProps> = ({}) => {
         });
     };
     return (
-        <button className="moufa-button">
-            <NextIcon onClick={(e) => onClick(e)} />
+        <button className="moufa-button" onClick={(e) => onClick(e)}>
+            <NextIcon />
         </button>
     );
 };

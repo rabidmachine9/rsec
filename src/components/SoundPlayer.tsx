@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import * as Tone from "tone";
 import { useGlobalState } from "./GlobalState";
 import { velocityToDb } from "../functions/synth";
 

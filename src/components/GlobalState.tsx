@@ -9,14 +9,23 @@ interface SequenceStep {
     velocityRange: number;
     armed: boolean;
     chance: number;
+    note: string;
 }
 
 interface Channel {
     sequence: Array<SequenceStep>;
     midiChannel: number;
-    soundFile: string;
+
     name: string;
     player?: Tone.Player;
+}
+
+interface SampleChannel extends Channel {
+    soundFile: string;
+}
+
+interface SynthChannel extends Channel {
+    oscillatorType: "sine" | "square" | "triangle" | "sawtooth";
 }
 
 // Define the type for the global state
@@ -24,7 +33,7 @@ type State = {
     bpm: number;
     msInterval: number;
     sequenceLength: number;
-    channel: Array<Channel>;
+    channel: Array<SampleChannel>;
     playing: boolean;
     selectedSeqButton: number;
     activeStep: number;
@@ -39,6 +48,7 @@ const defaultSequence: SequenceStep[] = Array.from({ length: 16 }, (_, i) => ({
     velocityRange: 0,
     armed: false,
     chance: 100,
+    note: "C4",
 }));
 
 // Define the type for actions
@@ -58,7 +68,7 @@ type Action =
     | { type: "SET_CHANNEL_MIDI"; payload: { channelIndex: number; midiChannel: number } }
     | { type: "SET_CHANNEL_NAME"; payload: { channelIndex: number; name: string } }
     | { type: "SET_CHANNEL_FILE"; payload: { channelIndex: number; soundFile: string } }
-    | { type: "SET_CHANNELS"; payload: Array<Channel> }
+    | { type: "SET_SAMPLE_CHANNELS"; payload: Array<SampleChannel> }
     | { type: "SET_SOUND_FILES"; payload: { [key: string]: string[] } }
     | { type: "SET_CHANNEL_PLAYER"; payload: { channelIndex: number; player: Tone.Player } };
 
@@ -75,6 +85,7 @@ const initialState: State = {
             midiChannel: -1,
             soundFile: "",
             name: "",
+            isSynth: false,
         })),
     playing: false,
     activeStep: -1,
@@ -193,7 +204,7 @@ const reducer = (state: State, action: Action): State => {
             const updatedChannel = state.channel.map((channel, index) => (index === channelIndex ? { ...channel, player } : channel));
             return { ...state, channel: updatedChannel };
         }
-        case "SET_CHANNELS":
+        case "SET_SAMPLE_CHANNELS":
             return { ...state, channel: action.payload };
         case "SET_SOUND_FILES":
             return { ...state, soundFiles: action.payload };
@@ -216,13 +227,13 @@ const GlobalStateProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 dispatch({ type: "SET_SOUND_FILES", payload: data });
                 const channelNames = Object.keys(data);
                 dispatch({
-                    type: "SET_CHANNELS",
+                    type: "SET_SAMPLE_CHANNELS",
                     payload: channelNames.map((name) => ({
                         sequence: defaultSequence,
                         midiChannel: -1,
                         name,
-                        soundFile: data[name][0], // First file in the folder
-                    })),
+                        soundFile: data[name][0], // Ensures soundFile exists
+                    })), // Explicitly cast the result as SampleChannel[]
                 });
             });
     }, []);

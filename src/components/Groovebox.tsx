@@ -12,17 +12,22 @@ import { SoundPlayer } from "./SoundPlayer";
 import { FileList } from "./FileList";
 import { ListenButton } from "./ListenButton";
 import SaveButton from "./ButtonSave";
+import LFOController from "./LFOController";
+import OscillatorWithLFO from "./OscillatorWithLFO";
 
 type GrooveProps = {};
 
 export const Groovebox: FunctionComponent<GrooveProps> = ({}) => {
     const { state, dispatch } = useGlobalState();
+    const [lfoFrequency, setLfoFrequency] = useState<number>(1);
 
     return (
         <div className="groovebox-container">
             <div className="screen-button-container">
                 <SoundPlayer />
                 <Screen selectedChannel={state.channel[state.selectedChannel]}></Screen>
+                {/* <OscillatorWithLFO lfoFrequency={lfoFrequency} /> */}
+                {/* <LFOController setLfoFrequency={setLfoFrequency} /> */}
                 <div className="button-container">
                     <ListenButton></ListenButton>
                     <PlayButton></PlayButton>

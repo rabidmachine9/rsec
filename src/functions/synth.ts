@@ -78,3 +78,32 @@ export const playSnare = (velocity: number) => {
     noiseEnvelope.triggerAttackRelease("8n", Tone.now(), normalizedVolume);
     oscEnvelope.triggerAttackRelease("8n", Tone.now(), normalizedVolume);
 };
+
+// Function to create and control a simple synth
+export function createSynth() {
+    const synth = new Tone.Synth({
+        oscillator: {
+            type: "sine", // You can change this to "square", "triangle", etc.
+        },
+        envelope: {
+            attack: 0.1,
+            decay: 0.2,
+            sustain: 0.5,
+            release: 1,
+        },
+    }).toDestination();
+
+    // Function to trigger a note
+    const playNote = (note: string, velocity: number) => {
+        const velocityVol = Tone.gainToDb(velocity); // Convert velocity to decibels
+        synth.volume.value = velocityVol;
+        synth.triggerAttackRelease(note, "8n");
+    };
+
+    // Optional: A way to clean up the synth if needed
+    const dispose = () => {
+        synth.dispose();
+    };
+
+    return { playNote, dispose };
+}

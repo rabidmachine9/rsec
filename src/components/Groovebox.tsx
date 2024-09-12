@@ -1,7 +1,6 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import { PlayButton } from "./ButtonPlay";
 import { Screen } from "./Screen";
-import { arrayRemove, bpmToMs } from "../functions/f";
 import { PreviousButton } from "./ButtonPrevious";
 import { NextButton } from "./ButtonNext";
 import { StopButton } from "./ButtonStop";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { SeqButton } from "./ButtonSeq";
 import { useGlobalState } from "./GlobalState";
 

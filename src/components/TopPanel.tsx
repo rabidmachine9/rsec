@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { MidiDeviceSelector } from "./MidiDeviceSelector";
 import { useGlobalState } from "./GlobalState";
 import { MidiDevice } from "../functions/types";

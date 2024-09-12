@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import StopIcon from "@mui/icons-material/Stop";
 import { useGlobalState } from "./GlobalState";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useGlobalState } from "./GlobalState";
 import { velocityToDb } from "../functions/synth";
 

@@ -1,7 +1,6 @@
-import React, { FunctionComponent, MouseEventHandler, SetStateAction, useState, Dispatch, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { useGlobalState } from "./GlobalState";
 import * as Tone from "tone";
-import { velocityToDb } from "../functions/synth";
 
 type ButtonProps = {
     text: string;

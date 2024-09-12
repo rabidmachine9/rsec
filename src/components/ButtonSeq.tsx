@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, useState, useEffect } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { arrayRemove } from "../functions/f";
 import { useGlobalState } from "./GlobalState";
 
@@ -52,7 +52,9 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({ button, index }) => 
     return (
         <button
             key={index}
-            className={`seq-button ${state.selectedSeqButton === index ? "selected " : ""} ${button.armed ? "armed " : ""} ${state.activeStep === index ? "active " : ""}`}
+            className={`seq-button ${state.selectedSeqButton === index ? "selected " : ""} ${button.armed ? "armed " : ""} ${
+                state.activeStep === index ? "active " : ""
+            }`}
             data-column={index}
             onClick={(e) => onClick(e, button)}
         ></button>

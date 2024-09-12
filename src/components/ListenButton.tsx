@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler } from "react";
+import React, { FunctionComponent } from "react";
 import MusicNote from "@mui/icons-material/MusicNote";
 import { useGlobalState } from "./GlobalState";
 

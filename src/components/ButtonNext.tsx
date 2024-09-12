@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler } from "react";
+import React, { FunctionComponent } from "react";
 import NextIcon from "@mui/icons-material/SkipNext";
 import { useGlobalState } from "./GlobalState";
 

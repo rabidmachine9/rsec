@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { ChannelButton } from "./ButtonChannel";
 import { useGlobalState } from "./GlobalState";
 

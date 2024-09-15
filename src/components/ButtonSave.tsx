@@ -38,7 +38,7 @@ const SaveButton = () => {
             // Prepare the state to save, excluding the player
             const stateToSave = {
                 ...state,
-                channels: state.channel.map((channel) => ({
+                channels: state.channels.map((channel) => ({
                     ...channel,
                     player: undefined, // Exclude player
                 })),

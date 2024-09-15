@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useGlobalState } from "./GlobalState";
 import * as Tone from "tone";
+import { SampleChannel, useGlobalState } from "./GlobalState";
 
 interface FilesStructure {
     [folder: string]: string[];
 }
 
-export const FileList = () => {
+interface FileListProps {
+    currentChannel: SampleChannel; // Ensure this is a SampleChannel
+}
+
+const FileList: React.FC<FileListProps> = ({ currentChannel }) => {
     const [files, setFiles] = useState<FilesStructure>({});
     const { state, dispatch } = useGlobalState();
 
@@ -23,11 +27,12 @@ export const FileList = () => {
     }, []);
 
     useEffect(() => {
+        const filePath = "/samples/" + currentChannel.name + "/" + currentChannel.soundFile;
         const player = new Tone.Player({
-            url: state.channel[state.selectedChannel].soundFile,
+            url: filePath,
             autostart: false,
         }).toDestination();
-        const filePath = "/samples/" + state.channel[state.selectedChannel].name + "/" + state.channel[state.selectedChannel].soundFile;
+
         player
             .load(filePath)
             .then(() => {
@@ -37,12 +42,11 @@ export const FileList = () => {
                 console.error(`Failed to load sound file: ${filePath}`, error);
             });
 
-        // Save the player instance in the global state
         dispatch({
             type: "SET_CHANNEL_PLAYER",
-            payload: { channelIndex: state.selectedChannel, player },
+            payload: { channelIndex: state.selectedChannelIndex, player },
         });
-    }, [state.channel[state.selectedChannel].soundFile]);
+    }, [currentChannel.soundFile]); // Dependencies
 
     const selectSound = (e: any, selectedChannel: number) => {
         dispatch({
@@ -55,16 +59,14 @@ export const FileList = () => {
         <div className="files-section">
             <div className="files-title">Sounds</div>
             {Object.keys(files).map((folder) => {
-                // If you want to filter by a specific folder, add an if statement here
-                if (folder === state.channel[state.selectedChannel].name) {
-                    // Replace 'BD' with your desired folder name
+                if (folder === currentChannel.name) {
                     return (
-                        <ul className="fil-list">
+                        <ul className="file-list" key={folder}>
                             {files[folder].map((file, index) => (
                                 <li
                                     key={index}
-                                    onClick={(e) => selectSound(e, state.selectedChannel)}
-                                    className={`file-name ${state.channel[state.selectedChannel].soundFile === file ? "selected-sound " : ""} `}
+                                    onClick={(e) => selectSound(e, state.selectedChannelIndex)}
+                                    className={`file-name ${currentChannel.soundFile === file ? "selected-sound" : ""}`}
                                 >
                                     {file}
                                 </li>
@@ -72,8 +74,6 @@ export const FileList = () => {
                         </ul>
                     );
                 }
-
-                // Return null or handle other folders accordingly if not 'BD'
                 return null;
             })}
         </div>

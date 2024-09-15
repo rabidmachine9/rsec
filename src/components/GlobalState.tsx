@@ -12,34 +12,37 @@ interface SequenceStep {
     note: string;
 }
 
-interface Channel {
+interface BaseChannel {
     sequence: Array<SequenceStep>;
     midiChannel: number;
-
     name: string;
+}
+
+export interface SampleChannel extends BaseChannel {
+    soundFile?: string;
     player?: Tone.Player;
 }
 
-interface SampleChannel extends Channel {
-    soundFile: string;
+export interface SynthChannel extends BaseChannel {
+    oscillatorType?: "sine" | "square" | "triangle" | "sawtooth";
+    synth?: Tone.Synth;
 }
 
-interface SynthChannel extends Channel {
-    oscillatorType: "sine" | "square" | "triangle" | "sawtooth";
-}
+export type Channel = SampleChannel | SynthChannel;
 
 // Define the type for the global state
 type State = {
     bpm: number;
     msInterval: number;
     sequenceLength: number;
-    channel: Array<SampleChannel>;
+    channels: Array<Channel>;
     playing: boolean;
     selectedSeqButton: number;
     activeStep: number;
-    selectedChannel: number;
+    selectedChannelIndex: number;
     midiDevice?: MidiDevice;
     soundFiles: { [key: string]: string[] };
+    synthChannelsLength: number;
 };
 
 const defaultSequence: SequenceStep[] = Array.from({ length: 16 }, (_, i) => ({
@@ -61,14 +64,14 @@ type Action =
     | { type: "SET_PLAYING"; payload: boolean }
     | { type: "UPDATE_ACTIVE"; payload: number }
     | { type: "SET_CHANNEL"; payload: number }
-    | { type: "SET_CHANNEL_ARMED"; payload: { channelIndex: number; stepIndex: number; armed: boolean } }
+    | { type: "SET_STEP_ARMED"; payload: { channelIndex: number; stepIndex: number; armed: boolean } }
     | { type: "SET_STEP_CHANCE"; payload: { channelIndex: number; stepIndex: number; chance: number } }
     | { type: "SET_STEP_VELOCITY"; payload: { channelIndex: number; stepIndex: number; velocity: number } }
     | { type: "SET_STEP_VELOCITY_RANGE"; payload: { channelIndex: number; stepIndex: number; velocityRange: number } }
     | { type: "SET_CHANNEL_MIDI"; payload: { channelIndex: number; midiChannel: number } }
     | { type: "SET_CHANNEL_NAME"; payload: { channelIndex: number; name: string } }
     | { type: "SET_CHANNEL_FILE"; payload: { channelIndex: number; soundFile: string } }
-    | { type: "SET_SAMPLE_CHANNELS"; payload: Array<SampleChannel> }
+    | { type: "SET_CHANNELS"; payload: Array<Channel> }
     | { type: "SET_SOUND_FILES"; payload: { [key: string]: string[] } }
     | { type: "SET_CHANNEL_PLAYER"; payload: { channelIndex: number; player: Tone.Player } };
 
@@ -78,19 +81,21 @@ const initialState: State = {
     msInterval: bpmToMs(120, 4),
     selectedSeqButton: 0,
     sequenceLength: 16,
-    channel: Array(7)
+    channels: Array(7)
         .fill(null)
         .map(() => ({
             sequence: defaultSequence,
             midiChannel: -1,
             soundFile: "",
             name: "",
-            isSynth: false,
+            oscillatorType: "sine",
         })),
+
     playing: false,
     activeStep: -1,
-    selectedChannel: 0,
+    selectedChannelIndex: 0,
     soundFiles: {},
+    synthChannelsLength: 1,
 };
 
 // Create the reducer function
@@ -109,11 +114,11 @@ const reducer = (state: State, action: Action): State => {
         case "SET_SELECTEDSEQBUTTON":
             return { ...state, selectedSeqButton: action.payload };
         case "SET_CHANNEL":
-            return { ...state, selectedChannel: action.payload };
-        case "SET_CHANNEL_ARMED": {
+            return { ...state, selectedChannelIndex: action.payload };
+        case "SET_STEP_ARMED": {
             const { channelIndex, stepIndex, armed } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     const updatedSequence = channel.sequence.map((step, stIndex) => (stIndex === stepIndex ? { ...step, armed } : step));
                     return { ...channel, sequence: updatedSequence };
@@ -121,12 +126,12 @@ const reducer = (state: State, action: Action): State => {
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_STEP_VELOCITY": {
             const { channelIndex, stepIndex, velocity } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     const updatedSequence = channel.sequence.map((step, stIndex) => (stIndex === stepIndex ? { ...step, velocity } : step));
                     return { ...channel, sequence: updatedSequence };
@@ -134,12 +139,12 @@ const reducer = (state: State, action: Action): State => {
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_STEP_VELOCITY_RANGE": {
             const { channelIndex, stepIndex, velocityRange } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     const updatedSequence = channel.sequence.map((step, stIndex) => (stIndex === stepIndex ? { ...step, velocityRange } : step));
                     return { ...channel, sequence: updatedSequence };
@@ -147,12 +152,12 @@ const reducer = (state: State, action: Action): State => {
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_STEP_CHANCE": {
             const { channelIndex, stepIndex, chance } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     const updatedSequence = channel.sequence.map((step, stIndex) => (stIndex === stepIndex ? { ...step, chance } : step));
                     return { ...channel, sequence: updatedSequence };
@@ -160,52 +165,52 @@ const reducer = (state: State, action: Action): State => {
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_CHANNEL_MIDI": {
             const { channelIndex, midiChannel } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     return { ...channel, midiChannel };
                 }
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_CHANNEL_NAME": {
             const { channelIndex, name } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     return { ...channel, name };
                 }
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         case "SET_CHANNEL_FILE": {
             const { channelIndex, soundFile } = action.payload;
 
-            const updatedChannel = state.channel.map((channel, chIndex) => {
+            const updatedChannel = state.channels.map((channel, chIndex) => {
                 if (chIndex === channelIndex) {
                     return { ...channel, soundFile };
                 }
                 return channel;
             });
 
-            return { ...state, channel: updatedChannel };
+            return { ...state, channels: updatedChannel };
         }
         // Inside your reducer
         case "SET_CHANNEL_PLAYER": {
             const { channelIndex, player } = action.payload;
-            const updatedChannel = state.channel.map((channel, index) => (index === channelIndex ? { ...channel, player } : channel));
-            return { ...state, channel: updatedChannel };
+            const updatedChannel = state.channels.map((channel, index) => (index === channelIndex ? { ...channel, player } : channel));
+            return { ...state, channels: updatedChannel };
         }
-        case "SET_SAMPLE_CHANNELS":
-            return { ...state, channel: action.payload };
+        case "SET_CHANNELS":
+            return { ...state, channels: action.payload };
         case "SET_SOUND_FILES":
             return { ...state, soundFiles: action.payload };
         default:
@@ -226,12 +231,14 @@ const GlobalStateProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             .then((data) => {
                 dispatch({ type: "SET_SOUND_FILES", payload: data });
                 const channelNames = Object.keys(data);
+                // console.log("data");
+                // console.log(data);
                 dispatch({
-                    type: "SET_SAMPLE_CHANNELS",
+                    type: "SET_CHANNELS",
                     payload: channelNames.map((name) => ({
                         sequence: defaultSequence,
                         midiChannel: -1,
-                        name,
+                        name: name,
                         soundFile: data[name][0], // Ensures soundFile exists
                     })), // Explicitly cast the result as SampleChannel[]
                 });

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { useGlobalState } from "./GlobalState";
+import { useGlobalState, Channel, SampleChannel, SynthChannel } from "./GlobalState";
 import { velocityToDb } from "../functions/synth";
+import * as Tone from "tone";
 
 export const SoundPlayer: React.FC = () => {
     const { state, dispatch } = useGlobalState();
@@ -15,14 +16,18 @@ export const SoundPlayer: React.FC = () => {
 
     useEffect(() => {
         if (state.playing) {
-            state.channel.forEach((channel, index) => {
+            state.channels.forEach((channel, index) => {
                 const armed = channel.sequence[state.activeStep]?.armed;
                 const probability = probabilityResult(channel.sequence[state.activeStep].chance);
-                if (armed && channel.player?.loaded && probability) {
+                if (armed && probability) {
                     const velocity = calculateVelocity(channel.sequence[state.activeStep].velocity, channel.sequence[state.activeStep].velocityRange);
-                    const velocityVol = velocityToDb(velocity);
-                    channel.player.volume.value = velocityVol;
-                    channel.player.start();
+                    if ("player" in channel && channel.player?.loaded) {
+                        const velocityVol = velocityToDb(velocity);
+                        channel.player.volume.value = velocityVol;
+                        channel.player.start();
+                    } else if ("synth" in channel && channel.synth) {
+                        channel.synth.triggerAttackRelease(channel.sequence[state.activeStep].note, "8n", undefined, velocity / 127);
+                    }
                 }
             });
         }

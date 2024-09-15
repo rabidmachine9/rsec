@@ -23,7 +23,7 @@ export const PlayButton: FunctionComponent<ButtonProps> = ({}) => {
     const { state, dispatch } = useGlobalState();
 
     const togglePlay = () => {
-        console.log(state.msInterval);
+        //console.log(state.msInterval);
         dispatch({ type: "SET_PLAYING", payload: !state.playing });
     };
 

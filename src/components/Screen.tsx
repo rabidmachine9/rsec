@@ -13,7 +13,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({ selectedChannel }) => {
         dispatch({
             type: "SET_STEP_VELOCITY",
             payload: {
-                channelIndex: state.selectedChannel,
+                channelIndex: state.selectedChannelIndex,
                 stepIndex: Number(state.selectedSeqButton),
                 velocity: Number(e.currentTarget.value),
             },
@@ -24,7 +24,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({ selectedChannel }) => {
         dispatch({
             type: "SET_STEP_VELOCITY_RANGE",
             payload: {
-                channelIndex: state.selectedChannel,
+                channelIndex: state.selectedChannelIndex,
                 stepIndex: Number(state.selectedSeqButton),
                 velocityRange: Number(e.currentTarget.value),
             },
@@ -35,7 +35,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({ selectedChannel }) => {
         dispatch({
             type: "SET_CHANNEL_MIDI",
             payload: {
-                channelIndex: state.selectedChannel,
+                channelIndex: state.selectedChannelIndex,
                 midiChannel: Number(e.currentTarget.value),
             },
         });
@@ -45,7 +45,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({ selectedChannel }) => {
         dispatch({
             type: "SET_STEP_CHANCE",
             payload: {
-                channelIndex: state.selectedChannel,
+                channelIndex: state.selectedChannelIndex,
                 stepIndex: Number(state.selectedSeqButton),
                 chance: Number(e.currentTarget.value),
             },
@@ -90,7 +90,7 @@ export const Screen: FunctionComponent<ScreenProps> = ({ selectedChannel }) => {
                 onChange={handleChanceUpdate}
             ></input>
             <span>%</span> <br />
-            <label>Sound:</label> {state.channel[state.selectedChannel].soundFile}
+            {/* <label>Sound:</label> {state.channel[state.selectedChannel].soundFile} */}
         </div>
     );
 };

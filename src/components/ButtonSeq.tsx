@@ -1,25 +1,24 @@
 import React, { FunctionComponent, useEffect } from "react";
-import { arrayRemove } from "../functions/f";
 import { useGlobalState } from "./GlobalState";
 
 type ButtonProps = {
     index: number;
-    button: any;
+    step: any;
 };
 
-export const SeqButton: FunctionComponent<ButtonProps> = ({ button, index }) => {
+export const SeqButton: FunctionComponent<ButtonProps> = ({ step, index }) => {
     const { state, dispatch } = useGlobalState();
 
     useEffect(() => {
         dispatch({
             type: "SET_STEP_VELOCITY",
             payload: {
-                channelIndex: Number(state.selectedChannel),
+                channelIndex: Number(state.selectedChannelIndex),
                 stepIndex: state.selectedSeqButton,
-                velocity: button.armed ? 120 : 0,
+                velocity: step.armed ? 120 : 0,
             },
         });
-    }, [button.armed]);
+    }, [step.armed]);
 
     const handleUpdateSelected = (e: any) => {
         dispatch({ type: "SET_SELECTEDSEQBUTTON", payload: Number(e.target.getAttribute("data-column")) });
@@ -27,17 +26,16 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({ button, index }) => 
     const handleUpdateTriggered = (e: any) => {
         // Update the 'triggered' value
         dispatch({
-            type: "SET_CHANNEL_ARMED",
+            type: "SET_STEP_ARMED",
             payload: {
-                channelIndex: Number(state.selectedChannel),
+                channelIndex: Number(state.selectedChannelIndex),
                 stepIndex: Number(e.target.getAttribute("data-column")),
-                armed: !button.armed,
+                armed: !step.armed,
             },
         });
     };
 
     function onClick(e: React.MouseEvent<HTMLButtonElement>, button: any) {
-        console.log("click");
         const target = e.currentTarget;
         target.classList.toggle("armed");
         //var seq_buttons = document.querySelectorAll('.seq-button')
@@ -52,11 +50,11 @@ export const SeqButton: FunctionComponent<ButtonProps> = ({ button, index }) => 
     return (
         <button
             key={index}
-            className={`seq-button ${state.selectedSeqButton === index ? "selected " : ""} ${button.armed ? "armed " : ""} ${
+            className={`seq-button ${state.selectedSeqButton === index ? "selected " : ""} ${step.armed ? "armed " : ""} ${
                 state.activeStep === index ? "active " : ""
             }`}
             data-column={index}
-            onClick={(e) => onClick(e, button)}
+            onClick={(e) => onClick(e, step)}
         ></button>
     );
 };

@@ -1,28 +1,28 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
-import { useGlobalState } from "./GlobalState";
+import React, { FunctionComponent, useEffect } from "react";
+import { useGlobalState, SampleChannel } from "./GlobalState";
 import * as Tone from "tone";
 
-type ButtonProps = {
-    text: string;
-    channel: number;
-};
+interface ButtonProps {
+    channel: SampleChannel;
+    index: number;
+}
 
-export const ChannelButton: FunctionComponent<ButtonProps> = ({ text, channel }) => {
+export const ChannelButton: FunctionComponent<ButtonProps> = ({ channel, index }) => {
     const { state, dispatch } = useGlobalState();
 
     useEffect(() => {
-        // Dispatch an action to update the channel name when the component mounts
-        dispatch({ type: "SET_CHANNEL_NAME", payload: { channelIndex: channel, name: text } });
-    }, []);
+        // Dispatch action to set the channel name on mount, but only for this channel
+        dispatch({ type: "SET_CHANNEL_NAME", payload: { channelIndex: index, name: channel.name } });
+    }, [channel.name, index, dispatch]);
 
     useEffect(() => {
-        if (!state.channel[state.selectedChannel].player) {
+        if (!channel.player) {
             const player = new Tone.Player({
-                url: state.channel[state.selectedChannel].soundFile,
+                url: channel.soundFile,
                 autostart: false,
             }).toDestination();
 
-            const filePath = "/samples/" + state.channel[state.selectedChannel].name + "/" + state.channel[state.selectedChannel].soundFile;
+            const filePath = `/samples/${channel.name}/${channel.soundFile}`;
             player
                 .load(filePath)
                 .then(() => {
@@ -35,22 +35,19 @@ export const ChannelButton: FunctionComponent<ButtonProps> = ({ text, channel })
             // Save the player instance in the global state
             dispatch({
                 type: "SET_CHANNEL_PLAYER",
-                payload: { channelIndex: state.selectedChannel, player },
+                payload: { channelIndex: index, player }, // Use index to correctly target this channel
             });
         }
-    }, [state.selectedChannel]);
+    }, [channel.player, channel.soundFile, channel.name, index, dispatch]);
 
-    const [id] = useState(text);
-    const handleClick = (e: any) => {
-        dispatch({ type: "SET_CHANNEL", payload: Number(e.target.getAttribute("data-channel")) });
+    // Handle channel selection on button click
+    const handleClick = () => {
+        dispatch({ type: "SET_CHANNEL", payload: index });
     };
+
     return (
-        <button
-            data-channel={channel}
-            onClick={(e) => handleClick(e)}
-            className={`moufa-button ${state.selectedChannel === channel ? "active-sound " : ""} `}
-        >
-            {text}
+        <button data-channel={index} onClick={handleClick} className={`moufa-button ${state.selectedChannelIndex === index ? "active-sound" : ""}`}>
+            {channel.name}
         </button>
     );
 };

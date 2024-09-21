@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { GlobalStateProvider } from "./components/GlobalState";
+// import { Buffer } from "buffer";
+
+// window.Buffer = Buffer; // Make Buffer globally available
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
@@ -11,7 +14,7 @@ root.render(
         <GlobalStateProvider>
             <App />
         </GlobalStateProvider>
-    </React.StrictMode>,
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

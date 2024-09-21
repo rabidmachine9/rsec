@@ -13,7 +13,6 @@ import { ListenButton } from "./ListenButton";
 import SaveButton from "./ButtonSave";
 import LFOController from "./LFOController";
 import OscillatorWithLFO from "./OscillatorWithLFO";
-import GibberEditor from "./GibberEditor";
 import { ToneEditor } from "./ToneEditor";
 
 type GrooveProps = {};
